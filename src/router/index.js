@@ -7,6 +7,7 @@ import LoadUserData from "../components/LoadingUserData.vue";
 import CompanySelect from "../components/companySelect.vue";
 import VehicleSelect from "../components/VehicleSelect.vue";
 import dutySelect from "../components/dutySelect.vue";
+import ticketSelling from "../components/ticketSelling.vue";
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: '/dutySelect',
     name: 'dutySelect',
     component: dutySelect,
+  },
+  {
+    path: '/ticketSelling',
+    name: 'ticketSelling',
+    component: ticketSelling,
   }
 ];
 
