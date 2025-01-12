@@ -5,12 +5,12 @@
     </div>
 
     <div class="status">
-      <img src="https://live.staticflickr.com/65535/54262843340_6a829de1cd_o_d.png" alt="">
+      <img src="https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/Messages.png?token=GHSAT0AAAAAAC5G2KAOYU6EMEVDOOQICON4Z4ECTVA" alt="">
       <p id="messagesNum">0</p>
       <img :src="gpsImage" alt="GPS Signal" id="gps" />
       <img :src="wifiImage" alt="Wi-Fi Signal" id="Wi-Fi" />
       <img :src="printerImage" alt="Printer Signal" id="Printer" />
-      <img src="https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png" alt="" id="Tracking">
+      <img src="https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA" alt="" id="Tracking">
     </div>
 
     <div class="footerTime">
@@ -26,8 +26,8 @@ export default {
   data() {
     return {
       gpsStrength: 0,
-      gpsImage: 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png',
-      wifiImage: 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png',
+      gpsImage: 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA',
+      wifiImage: 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA',
       time: '', // Live time
       date: '', // Live date
     };
@@ -43,11 +43,11 @@ export default {
     randomPrinterSignal() {
       const randomSignal = Math.floor(Math.random() * 100);
       if (randomSignal < 10) {
-        this.printerImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
+        this.printerImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
       } else if (randomSignal < 40) {
-        this.printerImage = 'https://live.staticflickr.com/65535/54262843335_2b52f87b6f_o_d.png';
+        this.printerImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/Printer%20Low.png?token=GHSAT0AAAAAAC5G2KAPH5ME7JDCMTXSCYWCZ4ECUCQ';
       } else {
-        this.printerImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+        this.printerImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/3.png?token=GHSAT0AAAAAAC5G2KAOXHIFVHT3M6LHEEMEZ4ECXFA';
       }
     },
     checkLocationPermission() {
@@ -59,41 +59,43 @@ export default {
           (error) => {
             console.error('Error getting geolocation:', error);
             this.gpsStrength = 0;
-            this.gpsImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
+            this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
           }
         );
       } else {
         console.error('Geolocation not supported');
         this.gpsStrength = 0;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
+        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
       }
     },
     getGPSSignalStrength(position) {
       const accuracy = position.coords.accuracy;
       if (accuracy < 10) {
         this.gpsStrength = 3;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/3.png?token=GHSAT0AAAAAAC5G2KAOXHIFVHT3M6LHEEMEZ4ECXFA';
       } else if (accuracy < 50) {
         this.gpsStrength = 2;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54262661674_f182df8274_o_d.png';
+        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/2.png?token=GHSAT0AAAAAAC5G2KAPAAX64M4IUHFGBXJWZ4ECW6A';
       } else if (accuracy < 100) {
         this.gpsStrength = 1;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54261533367_2c09f08a7f_o_d.png';
+        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/1.png?token=GHSAT0AAAAAAC5G2KAOXY25CVKJYDRZ3XDOZ4ECVFQ';
       } else {
         this.gpsStrength = 0;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
+        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
       }
     },
     getWiFiStrength() {
       const navigationStart = performance.timing.navigationStart;
       const domComplete = performance.timing.domComplete;
       const loadTime = domComplete - navigationStart;
-      if (loadTime < 2000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
-      } else if (loadTime < 5000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54262661674_f182df8274_o_d.png';
+      if (loadTime < 1000) {
+        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/3.png?token=GHSAT0AAAAAAC5G2KAOXHIFVHT3M6LHEEMEZ4ECXFA';
+      } else if (loadTime < 1500) {
+        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/2.png?token=GHSAT0AAAAAAC5G2KAPAAX64M4IUHFGBXJWZ4ECW6A';
+      } else if (loadTime < 3000) {
+        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/1.png?token=GHSAT0AAAAAAC5G2KAOXY25CVKJYDRZ3XDOZ4ECVFQ';
       } else {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
+        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
       }
     },
     updateTime() {
