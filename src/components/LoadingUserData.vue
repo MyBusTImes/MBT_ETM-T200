@@ -115,6 +115,8 @@ export default {
             this.allRoutes = this.companies.flatMap(company => company.routes || []);
             localStorage.setItem('routes', JSON.stringify(this.allRoutes));
 
+            localStorage.setItem('fleets', JSON.stringify(this.allFleets));
+
             this.startScrollingCompanies();
         } catch (error) {
             console.error('Failed to fetch data:', error);

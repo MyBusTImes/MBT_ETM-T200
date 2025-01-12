@@ -5,16 +5,21 @@
     </div>
 
     <div class="status">
-      <img src="https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/Messages.png?token=GHSAT0AAAAAAC5G2KAOYU6EMEVDOOQICON4Z4ECTVA" alt="">
+      <img src="https://live.staticflickr.com/65535/54262843340_6a829de1cd_o_d.png" alt="">
       <p id="messagesNum">0</p>
       <img :src="gpsImage" alt="GPS Signal" id="gps" />
       <img :src="wifiImage" alt="Wi-Fi Signal" id="Wi-Fi" />
       <img :src="printerImage" alt="Printer Signal" id="Printer" />
-      <img src="https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA" alt="" id="Tracking">
+      <img src="https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png" alt="" id="Tracking">
     </div>
 
-    <div class="footerTime">
+    <div class="footerTime" @click="toggleVisibility">
       <span>{{ time }}</span><br>
+      <span>{{ date }}</span>
+    </div>
+
+    <div class="time" id="time">
+      <span>{{ time }}{{ seconds }}</span><br>
       <span>{{ date }}</span>
     </div>
   </div>
@@ -26,9 +31,10 @@ export default {
   data() {
     return {
       gpsStrength: 0,
-      gpsImage: 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA',
-      wifiImage: 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA',
+      gpsImage: 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png',
+      wifiImage: 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png',
       time: '', // Live time
+      seconds: '',
       date: '', // Live date
     };
   },
@@ -37,17 +43,26 @@ export default {
     this.getWiFiStrength();
     this.randomPrinterSignal();
     this.updateTime(); // Start updating the time when the component is mounted
-    setInterval(this.updateTime, 1000); // Update the time every second
+    setInterval(this.updateTime, 100); // Update the time every second
   },
   methods: {
+    toggleVisibility() {
+      const timeElement = document.getElementById('time');
+      // Check current display value
+      if (timeElement.style.display === "none") {
+        timeElement.style.display = "block";
+      } else {
+        timeElement.style.display = "none";
+      }
+    },
     randomPrinterSignal() {
       const randomSignal = Math.floor(Math.random() * 100);
       if (randomSignal < 10) {
-        this.printerImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
+        this.printerImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
       } else if (randomSignal < 40) {
-        this.printerImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/Printer%20Low.png?token=GHSAT0AAAAAAC5G2KAPH5ME7JDCMTXSCYWCZ4ECUCQ';
+        this.printerImage = 'https://live.staticflickr.com/65535/54262843335_2b52f87b6f_o_d.png';
       } else {
-        this.printerImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/3.png?token=GHSAT0AAAAAAC5G2KAOXHIFVHT3M6LHEEMEZ4ECXFA';
+        this.printerImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
       }
     },
     checkLocationPermission() {
@@ -59,29 +74,29 @@ export default {
           (error) => {
             console.error('Error getting geolocation:', error);
             this.gpsStrength = 0;
-            this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
+            this.gpsImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
           }
         );
       } else {
         console.error('Geolocation not supported');
         this.gpsStrength = 0;
-        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
       }
     },
     getGPSSignalStrength(position) {
       const accuracy = position.coords.accuracy;
       if (accuracy < 10) {
         this.gpsStrength = 3;
-        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/3.png?token=GHSAT0AAAAAAC5G2KAOXHIFVHT3M6LHEEMEZ4ECXFA';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
       } else if (accuracy < 50) {
         this.gpsStrength = 2;
-        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/2.png?token=GHSAT0AAAAAAC5G2KAPAAX64M4IUHFGBXJWZ4ECW6A';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54262661674_f182df8274_o_d.png';
       } else if (accuracy < 100) {
         this.gpsStrength = 1;
-        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/1.png?token=GHSAT0AAAAAAC5G2KAOXY25CVKJYDRZ3XDOZ4ECVFQ';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54261533367_2c09f08a7f_o_d.png';
       } else {
         this.gpsStrength = 0;
-        this.gpsImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
       }
     },
     getWiFiStrength() {
@@ -89,22 +104,24 @@ export default {
       const domComplete = performance.timing.domComplete;
       const loadTime = domComplete - navigationStart;
       if (loadTime < 1000) {
-        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/3.png?token=GHSAT0AAAAAAC5G2KAOXHIFVHT3M6LHEEMEZ4ECXFA';
-      } else if (loadTime < 1500) {
-        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/2.png?token=GHSAT0AAAAAAC5G2KAPAAX64M4IUHFGBXJWZ4ECW6A';
-      } else if (loadTime < 3000) {
-        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/1.png?token=GHSAT0AAAAAAC5G2KAOXY25CVKJYDRZ3XDOZ4ECVFQ';
+        this.wifiImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+      } else if (loadTime < 2000) {
+        this.wifiImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+      } else if (loadTime < 5000) {
+        this.wifiImage = 'https://live.staticflickr.com/65535/54261533367_2c09f08a7f_o_d.png';
       } else {
-        this.wifiImage = 'https://raw.githubusercontent.com/Kai-codin/MBT-Ticketer/refs/heads/main/src/assets/Signal/0.png?token=GHSAT0AAAAAAC5G2KAOTLJDRVQZQMTJGXEIZ4ECUQA';
+        this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
       }
     },
     updateTime() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
       const day = String(now.getDate()).padStart(2, '0');
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const month = months[now.getMonth()];
+      this.seconds = `:${seconds}`;
       this.time = `${hours}:${minutes}`;
       this.date = `${month} ${day}`;
     }
@@ -113,6 +130,20 @@ export default {
 </script>
 
 <style scoped>
+.time {
+  display: none;
+  position: fixed;
+  width: 25%;
+  background: #fff77a;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 5%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 200%;
+}
 #messagesNum {
   color: white;
   position: fixed;
@@ -165,6 +196,7 @@ export default {
   text-align: right;
   font-size: 2rem;
   right: 10px;
+  cursor: pointer;
 }
 
 /* Media Queries */

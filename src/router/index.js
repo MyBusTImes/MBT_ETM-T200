@@ -5,6 +5,8 @@ import blank from "../components/blank.vue";
 import DriverLogin from "../components/Login.vue";
 import LoadUserData from "../components/LoadingUserData.vue";
 import CompanySelect from "../components/companySelect.vue";
+import VehicleSelect from "../components/VehicleSelect.vue";
+import dutySelect from "../components/dutySelect.vue";
 
 const routes = [
   {
@@ -36,6 +38,16 @@ const routes = [
     path: '/CompanySelect',
     name: 'CompanySelect',
     component: CompanySelect,
+  },
+  {
+    path: '/VehicleSelect',
+    name: 'VehicleSelect',
+    component: VehicleSelect,
+  },
+  {
+    path: '/dutySelect',
+    name: 'dutySelect',
+    component: dutySelect,
   }
 ];
 
