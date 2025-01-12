@@ -23,4 +23,5 @@ pnpm-debug.log*
 *.sw?
 
 #login
-Login.vue
+/src/components/Login.vue
+
