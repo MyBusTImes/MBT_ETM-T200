@@ -5,12 +5,27 @@
     </div>
 
     <div class="status">
-      <img src="https://live.staticflickr.com/65535/54262843340_6a829de1cd_o_d.png" alt="">
-      <p id="messagesNum">0</p>
-      <img :src="gpsImage" alt="GPS Signal" id="gps" />
-      <img :src="wifiImage" alt="Wi-Fi Signal" id="Wi-Fi" />
-      <img :src="printerImage" alt="Printer Signal" id="Printer" />
-      <img src="https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png" alt="" id="Tracking">
+      <div class="status-item">
+        <img src="https://live.staticflickr.com/65535/54262843340_6a829de1cd_o_d.png" alt="Status Icon 1">
+        <p style="transform: translate(0%, -200%);margin-bottom: -30%;" class="messagesNum">1</p>
+        <p class="messagesNum">Messages</p>
+      </div>
+      <div class="status-item">
+        <img :src="gpsImage" alt="GPS Signal" id="gps">
+        <p class="messagesNum">GPS</p>
+      </div>
+      <div class="status-item">
+        <img :src="wifiImage" alt="Wi-Fi Signal" id="Wi-Fi">
+        <p class="messagesNum">Wi-Fi</p>
+      </div>
+      <div class="status-item">
+        <img :src="printerImage" alt="Printer Signal" id="Printer">
+        <p class="messagesNum">Paper</p>
+      </div>
+      <div class="status-item">
+        <img src="https://live.staticflickr.com/65535/54265089689_3b0b1b2a6e_o_d.png" alt="Tracking" id="Tracking">
+        <p class="messagesNum">Tracking</p>
+      </div>
     </div>
 
     <div class="footerTime" @click="toggleVisibility">
@@ -130,6 +145,36 @@ export default {
 </script>
 
 <style scoped>
+.status {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 18%; /* Adjusted width for all items to fit 5 icons */
+}
+
+.status img {
+  max-width: 50px;
+  width: 50%; /* Adjust the width of the images */
+  height: auto;
+  object-fit: contain;
+}
+
+.messagesNum {
+  color: white;
+  margin-top: 5px;
+  font-size: 1rem;
+  text-align: center;
+}
+
 .time {
   display: none;
   position: fixed;
@@ -143,16 +188,6 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   font-size: 200%;
-}
-#messagesNum {
-  color: white;
-  position: fixed;
-  bottom: -15px;
-  z-index: 100;
-  left: 30%;
-  font-size: 250%;
-  font-weight: bolder;
-  text-align: center;
 }
 
 .footer {
@@ -175,21 +210,6 @@ export default {
   left: 10px;
 }
 
-.status {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 9vh;
-  width: 50%;
-  margin: 0 auto;
-}
-
-.status img {
-  width: 22%;
-  height: 100%;
-  object-fit: contain;
-}
-
 .footerTime {
   position: fixed;
   color: white;
@@ -201,16 +221,8 @@ export default {
 
 /* Media Queries */
 @media (max-width: 768px) {
-  #messagesNum {
-    z-index: 100;
-    left: 26.25%;
-    font-size: 250%;
-    font-weight: bolder;
-    text-align: center;
-  }
-
   .footer {
-    height: 10vh;
+    height: auto;
     flex-direction: column;
     justify-content: center;
   }
@@ -221,12 +233,13 @@ export default {
   }
 
   .status {
-    width: 60%;
+    width: 80%; /* Adjust width on smaller screens */
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
-  .status img {
-    width: 20%;
-    height: 80%;
+  .status-item {
+    width: 20%; /* Adjust item width */
   }
 
   .footerTime {
@@ -235,27 +248,14 @@ export default {
 }
 
 @media (max-width: 600px) {
-  #messagesNum {
-    color: transparent;
-  }
-
   .footer {
-    height: 10vh;
+    height: auto;
   }
 
-  .status {
-    position: fixed;
-    left: 25vw;
-    width: 50vw;
-  }
-
-  .status img {
-    width: 20%;
-    height: 80%;
-  }
+  
 
   .footerTime {
-    font-size: .75rem;
+    font-size: 1rem;
   }
 }
 </style>

@@ -59,12 +59,12 @@ export default {
         selectVehicle(vehicle) {
             localStorage.setItem('selectedVehicle', vehicle.id);
             console.log(`Selected Vehicle: ${vehicle.id} | ${vehicle.reg} | ${vehicle.fleet_number}`);
-            this.$router.push({ path: `/dutySelect` });
+            this.$router.push({ path: `/ticketSelling` });
             // Optionally navigate to another page or perform additional logic
         },
         logOff() {
             // Redirect the user to a login page or home page (if needed)
-            this.$router.push({ path: `/companySelect` });
+            this.$router.push({ path: `/RouteSelect` });
         }
     }
 };

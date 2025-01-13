@@ -8,6 +8,8 @@ import CompanySelect from "../components/companySelect.vue";
 import VehicleSelect from "../components/VehicleSelect.vue";
 import dutySelect from "../components/dutySelect.vue";
 import ticketSelling from "../components/ticketSelling.vue";
+import optionsMenu from "../components/options.vue";
+import RouteSelect from "../components/routeSelect.vue";
 
 const routes = [
   {
@@ -46,6 +48,11 @@ const routes = [
     component: VehicleSelect,
   },
   {
+    path: '/RouteSelect',
+    name: 'RouteSelect',
+    component: RouteSelect,
+  },
+  {
     path: '/dutySelect',
     name: 'dutySelect',
     component: dutySelect,
@@ -54,6 +61,11 @@ const routes = [
     path: '/ticketSelling',
     name: 'ticketSelling',
     component: ticketSelling,
+  },
+  {
+    path: '/optionsMenu',
+    name: 'optionsMenu',
+    component: optionsMenu,
   }
 ];
 
