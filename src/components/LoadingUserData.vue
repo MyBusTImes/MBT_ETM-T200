@@ -99,6 +99,22 @@ export default {
             }
 
             // Fetch companies
+            const ToResponse = await axios.get(`https://api.mybustimes.cc/api/conversation/`, {
+                params: { format: 'json', to: username },
+            });
+            this.conversationsToUser = ToResponse.data.results || [];
+
+            localStorage.setItem('UserToData', JSON.stringify(this.conversationsToUser));
+
+            const FromResponse = await axios.get(`https://api.mybustimes.cc/api/conversation/`, {
+                params: { format: 'json', From: username },
+            });
+            this.conversationsFromUser = FromResponse.data.results || [];
+
+            localStorage.setItem('UserFromData', JSON.stringify(this.conversationsFromUser));
+
+            localStorage.setItem('routes', JSON.stringify(this.allRoutes));
+            
             const companyResponse = await axios.get('https://api.mybustimes.cc/api/operator-codes/', {
                 params: { format: 'json', owner: username },
             });

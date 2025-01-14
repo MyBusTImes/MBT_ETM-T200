@@ -10,6 +10,8 @@ import dutySelect from "../components/dutySelect.vue";
 import ticketSelling from "../components/ticketSelling.vue";
 import optionsMenu from "../components/options.vue";
 import RouteSelect from "../components/routeSelect.vue";
+import messageSection from "../components/messages.vue";
+import message from "../components/message.vue"
 
 const routes = [
   {
@@ -66,6 +68,16 @@ const routes = [
     path: '/optionsMenu',
     name: 'optionsMenu',
     component: optionsMenu,
+  },
+  {
+    path: '/messageSection',
+    name: 'messageSection',
+    component: messageSection,
+  },
+  {
+    path: '/message',
+    name: 'message',
+    component: message,
   }
 ];
 

@@ -364,10 +364,10 @@ export default {
             const trackingImg = document.getElementById('Tracking');
             if (startStop.textContent == 'Stop Tracking'){
                 startStop.textContent = 'Start Tracking';
-                trackingImg.src = 'https://live.staticflickr.com/65535/54265089689_3b0b1b2a6e_o_d.png';
+                trackingImg.src = 'https://live.staticflickr.com/65535/54265089689_fcd864d237_o_d.png';
             } else {
                 startStop.textContent = 'Stop Tracking';
-                trackingImg.src = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+                trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_a378d6b4fb_o_d.png';
             }
             
         },

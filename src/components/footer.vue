@@ -6,8 +6,9 @@
 
     <div class="status">
       <div class="status-item">
-        <img src="https://live.staticflickr.com/65535/54262843340_6a829de1cd_o_d.png" alt="Status Icon 1">
-        <p style="transform: translate(0%, -200%);margin-bottom: -30%;" class="messagesNum">1</p>
+        <!-- https://live.staticflickr.com/65535/54264885401_932921103d_o_d.png-->
+        <img :src="getImageSrc(messages)" alt="Status Icon 1">
+        <p style="transform: translate(0%, -200%);margin-bottom: -30%;" class="messagesNum">{{ messages }}</p>
         <p class="messagesNum">Messages</p>
       </div>
       <div class="status-item">
@@ -23,7 +24,7 @@
         <p class="messagesNum">Paper</p>
       </div>
       <div class="status-item">
-        <img src="https://live.staticflickr.com/65535/54265089689_3b0b1b2a6e_o_d.png" alt="Tracking" id="Tracking">
+        <img src="https://live.staticflickr.com/65535/54265089689_fcd864d237_o_d.png" alt="Tracking" id="Tracking">
         <p class="messagesNum">Tracking</p>
       </div>
     </div>
@@ -51,6 +52,7 @@ export default {
       time: '', // Live time
       seconds: '',
       date: '', // Live date
+      messages: 0,
     };
   },
   mounted() {
@@ -61,6 +63,13 @@ export default {
     setInterval(this.updateTime, 100); // Update the time every second
   },
   methods: {
+    getImageSrc(messages) {
+      if (messages === 0) {
+        return 'https://live.staticflickr.com/65535/54262843340_988c73e09e_o_d.png';
+      } else {
+        return 'https://live.staticflickr.com/65535/54264885401_932921103d_o_d.png';
+      }
+    },
     toggleVisibility() {
       const timeElement = document.getElementById('time');
       // Check current display value
@@ -222,7 +231,6 @@ export default {
 /* Media Queries */
 @media (max-width: 768px) {
   .footer {
-    height: auto;
     flex-direction: column;
     justify-content: center;
   }
@@ -248,12 +256,17 @@ export default {
 }
 
 @media (max-width: 600px) {
-  .footer {
-    height: auto;
+  .status {
+    margin-left: 17%;
+    width: 60%;
+    margin-top: 25px;
   }
-
-  
-
+  .messagesNum{
+    font-size: 15%;
+  }
+  .status-item {
+    width: 20%; /* Adjust item width */
+  }
   .footerTime {
     font-size: 1rem;
   }

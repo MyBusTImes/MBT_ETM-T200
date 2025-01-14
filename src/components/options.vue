@@ -5,14 +5,14 @@
             <button>PASSENGER<br>OCCUPANCY</button>
         </div>
         <div class="full">
-            <button>END TRIP</button>
+            <button @click="endTrip">END TRIP</button>
         </div>
         <div class="inline">
             <button>DUTY SUMMARY</button>
             <button>TRIP SUMMARY</button>
         </div>
         <div class="full">
-            <button>MESSAGES</button>
+            <button @click="openMessages">MESSAGES</button>
         </div>
         <div class="full">
             <button @click="logOff">LOG OFF</button>
@@ -65,6 +65,12 @@ export default {
     methods: {
         navigateToOptions() {
             this.$router.push({ path: '/ticketSelling' });
+        },
+        openMessages() {
+            this.$router.push({ path: '/messageSection' });
+        },
+        endTrip() {
+            this.$router.push({ path: '/RouteSelect' });
         },
         logOff() {
             // Clear localStorage (persists across sessions)
