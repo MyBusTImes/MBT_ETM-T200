@@ -10,11 +10,11 @@
         </div>
         <div class="stop">
             <span class="tag tag2" style="height: 5vh;">STOP</span>
-            <button class="prev-button stop1">&lt;</button>
+            <button class="prev-button stop1" @click="prevStop">&lt;</button>
             <span class="stop1">
                 <p id="Stop">Name</p>
             </span>
-            <button class="next-button stop1">&gt;</button>
+            <button class="next-button stop1" @click="nextStop">&gt;</button>
         </div>
         <div class="stop">
             <span class="tag tag3" style="height: 5vh;">TO</span>
@@ -332,6 +332,8 @@
 </style>
 
 <script>
+import { updateCurrentStop } from '@/update_currect_stop.js';
+
 export default {
     data() {
         return {
@@ -340,44 +342,93 @@ export default {
             routeArray: [], // Holds the combined array
             currentIndexFrom: 0,
             currentIndexTo: 0,
+            currentIndexStop: 0,
+            INBOUND: true,
+            StopArray: [],
+            Start: '',
+            End: '',
+            tripId: '',
+            updatedStop: '', // New stop
         };
     },
     mounted() {
         //const routeID = localStorage.getItem('selectedRoute');
+        const INBOUND = localStorage.getItem('INBOUND');
         const routeStart = localStorage.getItem('selectedRouteStart');
         const routeEnd = localStorage.getItem('selectedRouteEnd');
-        //const routeStop1 = localStorage.getItem('selectedRouteStop1');
-        //const routeStop2 = localStorage.getItem('selectedRouteStop2');
+        const routeStop1 = localStorage.getItem('selectedRouteStop1');
+        const routeStop2 = localStorage.getItem('selectedRouteStop2');
         const routeDest1 = localStorage.getItem('selectedRouteDest1');
+        const TripID = localStorage.getItem('TripID');
         const routeDest1Array = routeDest1 === 'null' || !routeDest1 ? [] : routeDest1.split(' - ').filter(item => item !== 'null');
         const routeDest2 = localStorage.getItem('selectedRouteDest2');
         const routeDest2Array = routeDest2 === 'null' || !routeDest2 ? [] : routeDest2.split(' - ').filter(item => item !== 'null');
 
+        this.tripId = TripID;
 
+        const routeStop1Array = routeStop1 === 'null' || !routeStop1 ? [] : routeStop1.split('\r\n').filter(item => item !== 'null');
+        const routeStop2Array = routeStop2 === 'null' || !routeStop2 ? [] : routeStop2.split('\r\n').filter(item => item !== 'null');
+
+        this.INBOUND = INBOUND === 'true';
         this.routeArray = [routeStart, ...routeDest1Array, ...routeDest2Array, routeEnd].filter(Boolean);
 
+        if (this.INBOUND) {
+            this.StopArray = routeStop1Array;
+            this.Start = this.routeArray[0];
+            this.End = this.routeArray[this.routeArray.length - 1];
+            console.log('Inbound', this.Start, this.End);
+        } else {
+            this.StopArray = routeStop2Array;
+            this.Start = this.routeArray[this.routeArray.length - 1];
+            this.End = this.routeArray[0];
+            console.log('Outbound', this.Start, this.End);
+        }
+        console.log(INBOUND);
         this.updatePTags();
     },
     methods: {
         startStopTrip() {
             const startStop = document.getElementById('startStop');
             const trackingImg = document.getElementById('Tracking');
-            if (startStop.textContent == 'Stop Tracking'){
+            if (startStop.textContent == 'Stop Tracking') {
                 startStop.textContent = 'Start Tracking';
                 trackingImg.src = 'https://live.staticflickr.com/65535/54265089689_fcd864d237_o_d.png';
             } else {
                 startStop.textContent = 'Stop Tracking';
                 trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_a378d6b4fb_o_d.png';
             }
-            
+
         },
         updatePTags() {
             // Ensure the routeArray has content
             if (this.routeArray.length) {
                 const fromElement = document.getElementById('From');
                 const toElement = document.getElementById('To');
-                if (fromElement) fromElement.textContent = this.routeArray[0];
-                if (toElement) toElement.textContent = this.routeArray[this.routeArray.length - 1];
+                const stopElement = document.getElementById('Stop');
+
+                const fromText = this.Start;
+                const toText = this.End;
+
+                console.log(this.INBOUND);
+
+                // Update elements if they exist
+                if (fromElement) fromElement.textContent = fromText;
+                if (toElement) toElement.textContent = toText;
+
+                // Ensure StopArray has at least one element before updating
+                if (this.StopArray.length > 0 && stopElement) {
+                    stopElement.textContent = this.StopArray[0];
+                }
+            }
+        },
+
+        //Update the displayed dest or stop
+        updateStopTag() {
+            const StopElement = document.getElementById('Stop');
+            if (StopElement && this.StopArray.length > 0) {
+                StopElement.textContent = this.StopArray[this.currentIndexStop];
+                const updatedData = updateCurrentStop(this.tripId, this.StopArray[this.currentIndexStop]);
+                console.log(updatedData);
             }
         },
 
@@ -394,6 +445,25 @@ export default {
                 fromElement.textContent = this.routeArray[this.currentIndexFrom];
             }
         },
+        //end
+
+        //Change dest or stop
+
+        // Moves to the next stop
+        nextStop() {
+            if (this.StopArray.length > 0) {
+                this.currentIndexStop = (this.currentIndexStop + 1) % this.StopArray.length;
+                this.updateStopTag();
+            }
+        },
+        prevStop() {
+            if (this.StopArray.length > 0) {
+                this.currentIndexStop =
+                    (this.currentIndexStop - 1 + this.StopArray.length) % this.StopArray.length;
+                this.updateStopTag();
+            }
+        },
+
         prevDestinationTo() {
             if (this.routeArray.length > 0) {
                 this.currentIndexTo =

@@ -10,10 +10,16 @@
         <div v-for="vehicle in filteredVehicles" :key="vehicle.id" class="option">
             <button @click="selectVehicle(vehicle)">{{ vehicle.fleet_number }} | {{ vehicle.reg }}</button>
         </div>
+        <div class="popup"
+            style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 50vw; height: 10vh; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+            <button style="height: 100%;" class="button1 inOutBT" @click="submitTrip">START TRIP</button>
+        </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -57,10 +63,76 @@ export default {
             }
         },
         selectVehicle(vehicle) {
+            const popup = document.querySelector('.popup');
+            popup.style.display = 'block';
+
+            // Save vehicle selection in localStorage
             localStorage.setItem('selectedVehicle', vehicle.id);
             console.log(`Selected Vehicle: ${vehicle.id} | ${vehicle.reg} | ${vehicle.fleet_number}`);
-            this.$router.push({ path: `/ticketSelling` });
-            // Optionally navigate to another page or perform additional logic
+        },
+        submitTrip() {
+            // Get current date and time
+            const currentDate = new Date();
+            const currentDateTime = currentDate.toISOString().split('T')[0]; // Convert to ISO string format
+
+            // Get the start time from localStorage and set it
+            const startTime = localStorage.getItem('startTime');
+
+            // Get route number from localStorage
+            const routeNumber = localStorage.getItem('selectedRouteRouteNum');
+
+            // Get end destination from localStorage
+            const endDestination = localStorage.getItem('selectedEndDestination');
+
+            // Get vehicle ID from localStorage
+            const vehicleId = localStorage.getItem('selectedVehicle');
+
+            // Get route ID from localStorage
+            const routeId = localStorage.getItem('selectedRoute');
+
+            // Get current stop based on INBOUND value
+            const isInbound = JSON.parse(localStorage.getItem('INBOUND')); // Assuming true/false value
+            // Get the current stop
+            const currentStop = isInbound
+                ? localStorage.getItem('selectedRouteStop1')
+                : localStorage.getItem('selectedRouteStop2');
+
+            // Split the current stop into an array using \r\n as the separator
+            let stopArray = currentStop.split('\r\n');
+
+            // Set the last item of the array as the active one
+            const activeStop = stopArray[0];
+
+            // Optionally, you can store this active stop back into localStorage if needed
+            localStorage.setItem('activeRouteStop', activeStop);
+
+            // Output or use the active stop as needed
+            console.log(activeStop);
+
+
+            // Prepare the data for the POST request
+            const data = {
+                trip_date_time: `${currentDateTime} ${startTime}`,
+                route_number: routeNumber,
+                end_destination: endDestination,
+                vehicle_id: vehicleId,
+                route_id: routeId,
+                current_stop: activeStop
+            };
+
+            console.log(data);
+
+            // Make POST request using axios
+            axios.post('https://api.mybustimes.cc/api/trip/', data)
+                .then(response => {
+                    console.log('Trip submitted successfully:', response.data);
+                    localStorage.setItem('TripID', response.data.trip_id);
+                    // Optionally, navigate to another page or show a success message
+                    this.$router.push({ path: `/ticketSelling` });
+                })
+                .catch(error => {
+                    console.error('Error submitting trip:', error);
+                });
         },
         logOff() {
             // Redirect the user to a login page or home page (if needed)
@@ -70,6 +142,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
