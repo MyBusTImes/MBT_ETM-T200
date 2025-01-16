@@ -71,6 +71,8 @@ export default {
         },
         endTrip() {
             this.$router.push({ path: '/RouteSelect' });
+            const trackingImg = document.getElementById('Tracking');
+            trackingImg.src = 'https://live.staticflickr.com/65535/54265089689_fcd864d237_o_d.png';
         },
         logOff() {
             // Clear localStorage (persists across sessions)

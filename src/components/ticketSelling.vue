@@ -48,56 +48,11 @@
             <button>+</button>
             <p>AD SG Capped</p>
         </div>
-        <div class="ticket">
-            <p>£2.00</p>
-            <button>-</button>
-            <div class="count">
-                <p>0</p>
-            </div>
-            <button>+</button>
-            <p>AD SG Capped</p>
-        </div>
-        <div class="ticket">
-            <p>£2.00</p>
-            <button>-</button>
-            <div class="count">
-                <p>0</p>
-            </div>
-            <button>+</button>
-            <p>AD SG Capped</p>
-        </div>
-        <div class="ticket">
-            <p>£2.00</p>
-            <button>-</button>
-            <div class="count">
-                <p>0</p>
-            </div>
-            <button>+</button>
-            <p>AD SG Capped</p>
-        </div>
-        <div class="ticket">
-            <p>£2.00</p>
-            <button>-</button>
-            <div class="count">
-                <p>0</p>
-            </div>
-            <button>+</button>
-            <p>AD SG Capped</p>
-        </div>
-        <div class="ticket">
-            <p>£2.00</p>
-            <button>-</button>
-            <div class="count">
-                <p>0</p>
-            </div>
-            <button>+</button>
-            <p>AD SG Capped</p>
-        </div>
     </div>
     <div class="buttons">
         <button class="optionBT" @click="navigateToOptions">OPTIONS</button>
-        <button class="issue">READY</button>
-        <button id="startStop" class="startBT" @click="startStopTrip">Start Tracking</button>
+        <button class="issue">READY</button><button style="left: 50vw;" class="issue">Scan Ticket</button>
+        <button id="startStop" class="startBT">1/1</button>
     </div>
 </template>
 
@@ -148,7 +103,13 @@
     scroll-snap-align: center;
 }
 
+.swipe-container::-webkit-scrollbar {
+    display: none;
+}
+
 .swipe-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     display: flex;
     overflow-x: scroll;
     gap: 5px;
@@ -156,8 +117,7 @@
     padding: 0 5px;
     width: calc(90% - 20px);
     margin-left: calc(5% + 5px);
-    margin-top: 16px;
-    height: calc(5vh - 2px);
+    height: 3vh;
 }
 
 .left {
@@ -196,6 +156,7 @@
 }
 
 .ticket {
+    height: 33%;
     border: 1px solid #000000;
     text-align: center;
     background-color: #c5c2c5;
@@ -245,7 +206,7 @@
     color: #9d9c9d;
     font-size: 2.5vh;
     position: fixed;
-    width: 50vw;
+    width: 25vw;
     left: 25vw;
     height: 7.5vh;
 }
@@ -387,19 +348,9 @@ export default {
         this.updatePTags();
     },
     methods: {
-        startStopTrip() {
-            const startStop = document.getElementById('startStop');
-            const trackingImg = document.getElementById('Tracking');
-            if (startStop.textContent == 'Stop Tracking') {
-                startStop.textContent = 'Start Tracking';
-                trackingImg.src = 'https://live.staticflickr.com/65535/54265089689_fcd864d237_o_d.png';
-            } else {
-                startStop.textContent = 'Stop Tracking';
-                trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_a378d6b4fb_o_d.png';
-            }
-
-        },
         updatePTags() {
+            const trackingImg = document.getElementById('Tracking');
+            trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_a378d6b4fb_o_d.png';
             // Ensure the routeArray has content
             if (this.routeArray.length) {
                 const fromElement = document.getElementById('From');

@@ -71,68 +71,76 @@ export default {
             console.log(`Selected Vehicle: ${vehicle.id} | ${vehicle.reg} | ${vehicle.fleet_number}`);
         },
         submitTrip() {
-            // Get current date and time
-            const currentDate = new Date();
-            const currentDateTime = currentDate.toISOString().split('T')[0]; // Convert to ISO string format
+            const dontLog = localStorage.getItem('dontLog');
 
-            // Get the start time from localStorage and set it
-            const startTime = localStorage.getItem('startTime');
+            if (dontLog == true) {
+                this.$router.push({ path: `/ticketSelling` });
+            } else {
 
-            // Get route number from localStorage
-            const routeNumber = localStorage.getItem('selectedRouteRouteNum');
+                // Get current date and time
+                const currentDate = new Date();
+                const currentDateTime = currentDate.toISOString().split('T')[0]; // Convert to ISO string format
 
-            // Get end destination from localStorage
-            const endDestination = localStorage.getItem('selectedEndDestination');
+                // Get the start time from localStorage and set it
+                const startTime = localStorage.getItem('startTime');
 
-            // Get vehicle ID from localStorage
-            const vehicleId = localStorage.getItem('selectedVehicle');
+                // Get route number from localStorage
+                const routeNumber = localStorage.getItem('selectedRouteRouteNum');
 
-            // Get route ID from localStorage
-            const routeId = localStorage.getItem('selectedRoute');
+                // Get end destination from localStorage
+                const endDestination = localStorage.getItem('selectedEndDestination');
 
-            // Get current stop based on INBOUND value
-            const isInbound = JSON.parse(localStorage.getItem('INBOUND')); // Assuming true/false value
-            // Get the current stop
-            const currentStop = isInbound
-                ? localStorage.getItem('selectedRouteStop1')
-                : localStorage.getItem('selectedRouteStop2');
+                // Get vehicle ID from localStorage
+                const vehicleId = localStorage.getItem('selectedVehicle');
 
-            // Split the current stop into an array using \r\n as the separator
-            let stopArray = currentStop.split('\r\n');
+                // Get route ID from localStorage
+                const routeId = localStorage.getItem('selectedRoute');
 
-            // Set the last item of the array as the active one
-            const activeStop = stopArray[0];
+                // Get current stop based on INBOUND value
+                const isInbound = JSON.parse(localStorage.getItem('INBOUND')); // Assuming true/false value
+                // Get the current stop
+                const currentStop = isInbound
+                    ? localStorage.getItem('selectedRouteStop1')
+                    : localStorage.getItem('selectedRouteStop2');
 
-            // Optionally, you can store this active stop back into localStorage if needed
-            localStorage.setItem('activeRouteStop', activeStop);
+                // Split the current stop into an array using \r\n as the separator
+                let stopArray = currentStop.split('\r\n');
 
-            // Output or use the active stop as needed
-            console.log(activeStop);
+                // Set the last item of the array as the active one
+                const activeStop = stopArray[0];
+
+                // Optionally, you can store this active stop back into localStorage if needed
+                localStorage.setItem('activeRouteStop', activeStop);
+
+                // Output or use the active stop as needed
+                console.log(activeStop);
 
 
-            // Prepare the data for the POST request
-            const data = {
-                trip_date_time: `${currentDateTime} ${startTime}`,
-                route_number: routeNumber,
-                end_destination: endDestination,
-                vehicle_id: vehicleId,
-                route_id: routeId,
-                current_stop: activeStop
-            };
+                // Prepare the data for the POST request
+                const data = {
+                    trip_date_time: `${currentDateTime} ${startTime}`,
+                    route_number: routeNumber,
+                    end_destination: endDestination,
+                    vehicle_id: vehicleId,
+                    route_id: routeId,
+                    InBound: isInbound,
+                    current_stop: activeStop
+                };
 
-            console.log(data);
+                console.log(data);
 
-            // Make POST request using axios
-            axios.post('https://api.mybustimes.cc/api/trip/', data)
-                .then(response => {
-                    console.log('Trip submitted successfully:', response.data);
-                    localStorage.setItem('TripID', response.data.trip_id);
-                    // Optionally, navigate to another page or show a success message
-                    this.$router.push({ path: `/ticketSelling` });
-                })
-                .catch(error => {
-                    console.error('Error submitting trip:', error);
-                });
+                // Make POST request using axios
+                axios.post('https://api.mybustimes.cc/api/trip/', data)
+                    .then(response => {
+                        console.log('Trip submitted successfully:', response.data);
+                        localStorage.setItem('TripID', response.data.trip_id);
+                        // Optionally, navigate to another page or show a success message
+                        this.$router.push({ path: `/ticketSelling` });
+                    })
+                    .catch(error => {
+                        console.error('Error submitting trip:', error);
+                    });
+            }
         },
         logOff() {
             // Redirect the user to a login page or home page (if needed)
