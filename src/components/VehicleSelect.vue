@@ -94,7 +94,9 @@ export default {
                 const vehicleId = localStorage.getItem('selectedVehicle');
 
                 // Get route ID from localStorage
-                const routeId = localStorage.getItem('selectedRoute');
+                const routeId = localStorage.getItem('selectedRoute');     
+
+                const dontLog = localStorage.getItem('dontLog');                
 
                 // Get current stop based on INBOUND value
                 const isInbound = JSON.parse(localStorage.getItem('INBOUND')); // Assuming true/false value
@@ -130,16 +132,20 @@ export default {
                 console.log(data);
 
                 // Make POST request using axios
-                axios.post('https://api.mybustimes.cc/api/trip/', data)
-                    .then(response => {
-                        console.log('Trip submitted successfully:', response.data);
-                        localStorage.setItem('TripID', response.data.trip_id);
-                        // Optionally, navigate to another page or show a success message
-                        this.$router.push({ path: `/ticketSelling` });
-                    })
-                    .catch(error => {
-                        console.error('Error submitting trip:', error);
-                    });
+				if (dontLog !== 'true') {
+					axios.post('https://api.mybustimes.cc/api/trip/', data)
+						.then(response => {
+							console.log('Trip submitted successfully:', response.data);
+							localStorage.setItem('TripID', response.data.trip_id);
+							// Optionally, navigate to another page or show a success message
+							this.$router.push({ path: `/ticketSelling` });
+						})
+						.catch(error => {
+							console.error('Error submitting trip:', error);
+						});
+				} else {
+					this.$router.push({ path: `/ticketSelling` });
+				}
             }
         },
         logOff() {

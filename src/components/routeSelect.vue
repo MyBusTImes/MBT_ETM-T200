@@ -17,8 +17,8 @@
     </div>
     <div class="popup"
         style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 50vw; height: 20vh; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
-        <button class="button1 inOutBT">INBOUND</button><br>
-        <button class="button2 inOutBT">OUTBOUND</button>
+        <button class="button1 inOutBT">INBOUND to {{ this.stop2Array }}</button><br>
+        <button class="button2 inOutBT">OUTBOUND to {{ this.stopArray }}</button>
     </div>
     <div class="popup2"
         style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 50vw; height: 20vh; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
@@ -59,6 +59,8 @@ export default {
             username: '',
             routes: [],
             filteredRoutes: [],
+            stopArray: 'test',
+            stop2Array: '',
             selectedEndDestination: '', // Variable for storing selected end destination
             endDestinations: [] // Array for storing split destinations
         };
@@ -123,6 +125,9 @@ export default {
             const destinationArray = destination === 'null' || !destination ? [] : destination.split(' - ').filter(item => item !== 'null');
             const destination2Array = destination2 === 'null' || !destination2 ? [] : destination2.split(' - ').filter(item => item !== 'null');
 
+            this.stopArray = stop1Array;
+            this.stop2Array = stop2Array;
+          
             this.endDestinations = [stop1Array, stop2Array, ...destinationArray, ...destination2Array];
 
             // Save the selected route information in localStorage
