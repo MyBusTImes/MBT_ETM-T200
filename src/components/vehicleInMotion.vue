@@ -5,9 +5,11 @@
 
         <div class="passengers">PASSENGERS: {{ passengerCount }}</div>
 
-        <h3>Nest Stop: {{ nextStop }}</h3>
+        <h3>Next Stop: {{ nextStop }}</h3>
 
-        <button class="issue" @click.stop="arriveAtStop">ARRIVE AT STOP: <br> {{ nextStop }}</button>
+
+        <h3 class="lastStop">Last Stop: {{ lastStop }}</h3><br><br>
+        <button class="issue" @click.stop="arriveAtStop">ARRIVED AT: <br> {{ nextStop }}</button>
     </div>
 </template>
 
@@ -19,6 +21,7 @@ export default {
         return {
             passengerCount: 0,
             nextStop: 'STOP NAME',
+            lastStop: 'STOP NAME',
         }
     },
     mounted() {
@@ -36,6 +39,7 @@ export default {
         // Ensure the stopArray has valid stops and calculate the next stop index
         if (this.stopArray.length > 0 && this.currentIndexStop + 1 < this.stopArray.length) {
             this.nextStop = this.stopArray[this.currentIndexStop]; // Get next stop
+            this.lastStop = this.stopArray[this.currentIndexStop - 1]; // Get last stop
         } else {
             this.nextStop = 'No more stops'; // Fallback if no more stops are available
         }
@@ -50,6 +54,7 @@ export default {
             this.currentIndexStop = this.currentIndexStop + 1;
             localStorage.setItem('currentIndexStop', this.currentIndexStop)
             this.nextStop = this.stopArray[this.currentIndexStop];
+            this.lastStop = this.stopArray[this.currentIndexStop - 1]; // Get last stop
         },
         goToTicketSelling() {
             this.$router.go(-1);
@@ -60,6 +65,12 @@ export default {
 
 
 <style>
+.lastStop{
+    position: fixed;
+    bottom: 20vh;
+    text-align: center;
+    width: 100vw;
+}
 .vehicle .issue {
     background-color: rgb(56, 56, 56);
     color: white;

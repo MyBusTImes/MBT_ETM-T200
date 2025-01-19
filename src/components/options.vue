@@ -70,8 +70,9 @@ export default {
             this.$router.push({ path: '/messageSection' });
         },
         endTrip() {
-            const keysToRemove = ['currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedVehicle', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
+            const keysToRemove = ['tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedVehicle', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
             keysToRemove.forEach(key => localStorage.removeItem(key));
+            localStorage.setItem('InMotition', false);
 
             this.$router.push({ path: '/RouteSelect' });
             const trackingImg = document.getElementById('Tracking');

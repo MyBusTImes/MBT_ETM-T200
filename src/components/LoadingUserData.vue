@@ -1,7 +1,9 @@
 <template>
     <div class="terminal">
-        <h1>TICKETER</h1>
-        <p>Please wait a few moments...</p>
+        <div class="data-loading">
+            <h1>TICKETER</h1>
+            <p>Please wait a few moments...</p>
+        </div>
         <p v-if="loading" class="loading-text">Loading...</p>
         <div class="terminal-view">
             <div class="hideme">

@@ -110,7 +110,8 @@ export default {
 
     methods: {
         selectTicket() {
-            this.$router.push({ path: '/ticketSelling' });
+            localStorage.setItem('dontLog', true);
+            this.$router.push({ path: '/loadTicketData' });
         },
         selectDead() {
             const popup3 = document.querySelector('.DeadPopup');

@@ -86,7 +86,7 @@ export default {
 
             console.log(this.dead);
             if (dontLog === true) {
-                this.$router.push({ path: `/ticketSelling` });
+                this.$router.push({ path: `/loadTicketData` });
             } else if (this.dead) {
                 console.log('not ah' + this.dead);
                 const currentDate = new Date();
@@ -99,7 +99,7 @@ export default {
                     route_number: 'dead',
                     end_destination: '',
                     vehicle_id: vehicleId,
-                    route_id: -1,
+                    route_id: null,
                     InBound: '',
                     current_stop: currentStop
                 };
@@ -110,7 +110,7 @@ export default {
                         console.log('Trip submitted successfully:', response.data);
                         localStorage.setItem('TripID', response.data.trip_id);
                         // Optionally, navigate to another page or show a success message
-                        this.$router.push({ path: `/ticketSelling` });
+                        this.$router.push({ path: `/loadTicketData` });
                     })
                     .catch(error => {
                         console.error('Error submitting trip:', error);
@@ -165,13 +165,13 @@ export default {
                             console.log('Trip submitted successfully:', response.data);
                             localStorage.setItem('TripID', response.data.trip_id);
                             // Optionally, navigate to another page or show a success message
-                            this.$router.push({ path: `/ticketSelling` });
+                            this.$router.push({ path: `/loadTicketData` });
                         })
                         .catch(error => {
                             console.error('Error submitting trip:', error);
                         });
                 } else {
-                    this.$router.push({ path: `/ticketSelling` });
+                    this.$router.push({ path: `/loadTicketData` });
                 }
             }
         },
