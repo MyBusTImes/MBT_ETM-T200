@@ -485,7 +485,7 @@ export default {
 }
 
 .ticket {
-    max-height: calc(17.5vh - 10px);
+    max-height: calc(20vh - 10px);
     border: 1px solid #000000;
     text-align: center;
     background-color: #c5c2c5;
