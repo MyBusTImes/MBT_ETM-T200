@@ -4,7 +4,7 @@
             <span class="tag tag1" style="height: 5vh;">FROM</span>
             <button class="prev-button terminus" @click="prevDestinationFrom">&lt;</button>
             <span class="terminus">
-                <p id="From">Name</p>
+                <p id="From">FROM</p>
             </span>
             <button class="next-button terminus" @click="nextDestinationFrom">&gt;</button>
         </div>
@@ -12,7 +12,7 @@
             <span class="tag tag2" style="height: 5vh;">STOP</span>
             <button class="prev-button stop1" @click="prevStop">&lt;</button>
             <span class="stop1">
-                <p id="Stop">Name</p>
+                <p id="Stop">STOP</p>
             </span>
             <button class="next-button stop1" @click="nextStop">&gt;</button>
         </div>
@@ -20,7 +20,7 @@
             <span class="tag tag3" style="height: 5vh;">TO</span>
             <button class="prev-button terminus" @click="prevDestinationTo">&lt;</button>
             <span class="terminus">
-                <p id="To">Name</p>
+                <p id="To">TO</p>
             </span>
             <button class="next-button terminus" @click="nextDestinationTo">&gt;</button>
         </div>
@@ -303,17 +303,25 @@ export default {
             routeArray: [], // Holds the combined array
             currentIndexFrom: 0,
             currentIndexTo: 0,
-            currentIndexStop: 0,
+            currentIndexStop: Number(localStorage.getItem('currentIndexStop')) - 1 || 0,
             INBOUND: true,
             StopArray: [],
             Start: '',
             End: '',
             tripId: '',
             updatedStop: '', // New stop
+            inactivityTimer: null, // Timer to track inactivity
         };
     },
     mounted() {
-        //const routeID = localStorage.getItem('selectedRoute');
+        console.log(this.currentIndexStop),
+        this.startInactivityTimer();
+        
+        // Setting up event listeners for user activity
+        window.addEventListener('mousemove', this.resetInactivityTimer);
+        window.addEventListener('keydown', this.resetInactivityTimer);
+        
+        // Fetch data from localStorage (same as before)
         const INBOUND = localStorage.getItem('INBOUND');
         const routeStart = localStorage.getItem('selectedRouteStart');
         const routeEnd = localStorage.getItem('selectedRouteEnd');
@@ -338,16 +346,32 @@ export default {
             this.Start = this.routeArray[0];
             this.End = this.routeArray[this.routeArray.length - 1];
             console.log('Inbound', this.Start, this.End);
+            localStorage.setItem('stopArray', JSON.stringify(this.StopArray));
         } else {
             this.StopArray = routeStop2Array;
             this.Start = this.routeArray[this.routeArray.length - 1];
             this.End = this.routeArray[0];
             console.log('Outbound', this.Start, this.End);
+            localStorage.setItem('stopArray', JSON.stringify(this.StopArray));
         }
         console.log(INBOUND);
         this.updatePTags();
     },
     methods: {
+        startInactivityTimer() {
+            // Set inactivity timer to redirect after 30 seconds
+            this.inactivityTimer = setTimeout(() => {
+                console.log('test');
+                this.$router.push({ path: '/vehicleInMotition'});
+            }, 10000); // 30 seconds
+        },
+
+        resetInactivityTimer() {
+            // Clear the previous timer and restart the countdown
+            clearTimeout(this.inactivityTimer);
+            this.startInactivityTimer();
+        },
+
         updatePTags() {
             const trackingImg = document.getElementById('Tracking');
             trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_a378d6b4fb_o_d.png';
@@ -368,7 +392,8 @@ export default {
 
                 // Ensure StopArray has at least one element before updating
                 if (this.StopArray.length > 0 && stopElement) {
-                    stopElement.textContent = this.StopArray[0];
+                    this.currentIndexStop = Number(localStorage.getItem('currentIndexStop')) - 1,
+                    stopElement.textContent = this.StopArray[this.currentIndexStop];
                 }
             }
         },
@@ -396,7 +421,6 @@ export default {
                 fromElement.textContent = this.routeArray[this.currentIndexFrom];
             }
         },
-        //end
 
         //Change dest or stop
 
@@ -404,6 +428,7 @@ export default {
         nextStop() {
             if (this.StopArray.length > 0) {
                 this.currentIndexStop = (this.currentIndexStop + 1) % this.StopArray.length;
+                localStorage.setItem('currentIndexStop', (this.currentIndexStop + 1) % this.StopArray.length);
                 this.updateStopTag();
             }
         },
@@ -411,6 +436,7 @@ export default {
             if (this.StopArray.length > 0) {
                 this.currentIndexStop =
                     (this.currentIndexStop - 1 + this.StopArray.length) % this.StopArray.length;
+                localStorage.setItem('currentIndexStop', (this.currentIndexStop + 1) % this.StopArray.length);
                 this.updateStopTag();
             }
         },

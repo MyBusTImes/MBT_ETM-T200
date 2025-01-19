@@ -78,6 +78,18 @@ export default {
     padding-left: 10px;
 }
 
+.DefualtOption {
+  width: 100%;
+  height: 5vh;
+  margin-bottom: 10px;
+}
+
+.DefualtOption button {
+    font-size: 110%;
+    height: 100%;
+    width: 50%;
+}
+
 .option {
   width: 100%;
   height: 5vh;

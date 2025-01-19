@@ -7,12 +7,17 @@
         <button class="buttonLogOut" @click="logOff">BACK</button>
     </div>
     <div class="options">
+        <div class="DefualtOption">
+            <button style="border-right: 5px white solid;" @click="selectTicket()">Ticket Selling</button><button
+                style="border-left: 5px white solid;" @click="selectDead()">Dead Run</button>
+        </div>
         <div v-for="Route in filteredRoutes" :key="Route.id" class="option">
             <button @click="selectRoute(Route)">{{ Route.route_num }} | {{ Route.start_destination }} | {{
                 Route.end_destination }}</button>
         </div>
     </div>
-    <div id="fade" style="display: none; position: fixed;top: 0;left: 0;right: 0;border: 0;background: #000000d1;width: 100%;height: 100%;/*! z-index: ; */">
+    <div id="fade"
+        style="display: none; position: fixed;top: 0;left: 0;right: 0;border: 0;background: #000000d1;width: 100%;height: 100%;/*! z-index: ; */">
         <button class="Close" @click="close()" style="padding: 2.55% 5%;">X</button>
     </div>
     <div class="popup"
@@ -35,14 +40,19 @@
         <label for="startTime">Start Time</label><br>
         <input type="time" id="startTime" v-model="startTime" data-tempmail="17613"
             style="border: 0;width: 100%;text-align: center;height: 7.5vh;font-size: 2vh;">
-        <button style="border-right: 5px solid white;" class="button3 inOutBT">SET</button><button style="border-left: 5px solid white;" class="button3 inOutBT" @click="dontLog()">DON'T LOG</button>
+        <button style="border-right: 5px solid white;" class="button3 inOutBT">SET</button><button
+            style="border-left: 5px solid white;" class="button3 inOutBT" @click="dontLog()">DON'T LOG</button>
+    </div>
+    <div class="DeadPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 50vw; height: 10vh; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+        <input type="text" name="DeadRunName" id="DeadRunName" placeholder="Dead Run To: ">
+        <button style="height: 100%;" class="button1 inOutBT" @click="startDeadRun">SET</button>
     </div>
 </template>
 
 <style>
 .button3.inOutBT {
-  display: inline-block;
-  width: 50%;
+    display: inline-block;
+    width: 50%;
 }
 
 .inOutBT {
@@ -99,8 +109,17 @@ export default {
     },
 
     methods: {
+        selectTicket() {
+            this.$router.push({ path: '/ticketSelling' });
+        },
+        selectDead() {
+            const popup3 = document.querySelector('.DeadPopup');
+            popup3.style.display = 'block';
+            this.$router.push({ path: '/VehicleSelect' });
+            localStorage.setItem('dead', true);
+        },
         close() {
-            location.reload(); 
+            location.reload();
         },
         filterRoutes(companyCode) {
             if (companyCode) {
@@ -127,7 +146,7 @@ export default {
 
             this.stopArray = stop1Array;
             this.stop2Array = stop2Array;
-          
+
             this.endDestinations = [stop1Array, stop2Array, ...destinationArray, ...destination2Array];
 
             // Save the selected route information in localStorage

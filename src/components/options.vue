@@ -70,6 +70,9 @@ export default {
             this.$router.push({ path: '/messageSection' });
         },
         endTrip() {
+            const keysToRemove = ['currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedVehicle', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+
             this.$router.push({ path: '/RouteSelect' });
             const trackingImg = document.getElementById('Tracking');
             trackingImg.src = 'https://live.staticflickr.com/65535/54265089689_fcd864d237_o_d.png';

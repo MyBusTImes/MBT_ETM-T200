@@ -12,6 +12,7 @@ import optionsMenu from "../components/options.vue";
 import RouteSelect from "../components/routeSelect.vue";
 import messageSection from "../components/messages.vue";
 import message from "../components/message.vue"
+import vehicleInMotition from "../components/vehicleInMotion.vue"
 
 const routes = [
   {
@@ -78,6 +79,11 @@ const routes = [
     path: '/message',
     name: 'message',
     component: message,
+  },
+  {
+    path: '/vehicleInMotition',
+    name: 'vehicleInMotition',
+    component: vehicleInMotition,
   }
 ];
 

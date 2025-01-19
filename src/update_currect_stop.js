@@ -4,6 +4,7 @@ import axios from 'axios';
 export async function updateCurrentStop(tripId, updatedStop) {
     try {
         // Fetch the trip data first
+
         const response = await axios.get(
             `https://api.mybustimes.cc/api/trip/`,
             {

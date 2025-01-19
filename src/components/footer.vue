@@ -35,8 +35,10 @@
     </div>
 
     <div class="time" id="time">
+      <h2>TIME</h2>
       <span>{{ time }}{{ seconds }}</span><br>
       <span>{{ date }}</span>
+      <p>TAP CLOCK TO DISMISS</p>
     </div>
   </div>
 </template>
@@ -73,10 +75,10 @@ export default {
     toggleVisibility() {
       const timeElement = document.getElementById('time');
       // Check current display value
-      if (timeElement.style.display === "none") {
-        timeElement.style.display = "block";
-      } else {
+      if (timeElement.style.display === "block") {
         timeElement.style.display = "none";
+      } else {
+        timeElement.style.display = "block";
       }
     },
     randomPrinterSignal() {
@@ -187,16 +189,56 @@ export default {
 .time {
   display: none;
   position: fixed;
-  width: 25%;
-  background: #fff77a;
-  height: 100px;
+  width: 50vw;
+  height: 20vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background: #fff77a;
   padding: 5%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  font-size: 200%;
+  font-size: 7.5vw;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-top: 50px solid rgb(80, 80, 80);
+  border-bottom: 25px solid rgb(80, 80, 80);
+}
+
+.time h2 {
+  position: fixed;
+  top: 4vw;
+  margin-top: -80px;
+  margin-left: -30px;
+  font-size: 3.5vw;
+  font-weight: normal;
+  color: white;
+  text-align: left;
+}
+
+.time p {
+  position: fixed;
+  top: calc(27.5vw + 10px);
+  width: 50vw;
+  font-size: 2vw;
+  color: white;
+  text-align: center;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 740px) {
+  .time h2 {
+    top: 6vw;
+  }
+}
+
+@media (max-width: 660px) {
+  .time {
+    border-top: 30px solid rgb(80, 80, 80);
+  }
+  
+  .time h2 {
+    top: 10vw;
+    margin-left: -20px;
+  }
 }
 
 .footer {

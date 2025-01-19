@@ -29,15 +29,23 @@ export default {
         };
     },
     mounted() {
+        const dead = localStorage.getItem('dead');
         const selectedCompany = localStorage.getItem('selectedCompany');
         const storedVehicles = localStorage.getItem('fleets');
+
+        this.dead = dead;
 
         console.log(storedVehicles);
 
         if (storedVehicles) {
             try {
                 this.vehicles = JSON.parse(storedVehicles); // Parse the stored vehicles
-                this.filterVehicles(selectedCompany);
+                this.filterVehicles(selectedCompany); // Filter vehicles based on selected company
+
+                // Sort the filteredVehicles array
+                this.filteredVehicles = this.filteredVehicles.sort((a, b) => {
+                    return a.fleet_number.localeCompare(b.fleet_number, undefined, { numeric: true, sensitivity: 'base' });
+                });
             } catch (error) {
                 console.error('Failed to parse fleets from localStorage:', error);
                 this.vehicles = []; // Fallback to an empty array
@@ -51,11 +59,12 @@ export default {
         this.username = localStorage.getItem('username') || 'Guest'; // Default to 'Guest' if no username is found
     },
 
+
     methods: {
         filterVehicles(companyCode) {
             if (companyCode) {
                 this.filteredVehicles = this.vehicles.filter(
-                    (vehicle) => vehicle.operator_code === companyCode
+                    (vehicle) => vehicle.operator_code === companyCode && vehicle.in_service === true
                 );
             } else {
                 console.error('No selected company found in localStorage');
@@ -68,40 +77,58 @@ export default {
 
             // Save vehicle selection in localStorage
             localStorage.setItem('selectedVehicle', vehicle.id);
+            localStorage.setItem('currentIndexStop', 1);
             console.log(`Selected Vehicle: ${vehicle.id} | ${vehicle.reg} | ${vehicle.fleet_number}`);
+            console.log(this.dead);
         },
         submitTrip() {
             const dontLog = localStorage.getItem('dontLog');
 
-            if (dontLog == true) {
+            console.log(this.dead);
+            if (dontLog === true) {
                 this.$router.push({ path: `/ticketSelling` });
-            } else {
+            } else if (this.dead) {
+                console.log('not ah' + this.dead);
+                const currentDate = new Date();
+                const currentDateTime = currentDate.toISOString();
+                const vehicleId = localStorage.getItem('selectedVehicle');
+                const currentStop = 'dead';
 
-                // Get current date and time
+                const data = {
+                    trip_date_time: `${currentDateTime}`,
+                    route_number: 'dead',
+                    end_destination: '',
+                    vehicle_id: vehicleId,
+                    route_id: -1,
+                    InBound: '',
+                    current_stop: currentStop
+                };
+
+                console.log(data);
+                axios.post('https://api.mybustimes.cc/api/trip/', data)
+                    .then(response => {
+                        console.log('Trip submitted successfully:', response.data);
+                        localStorage.setItem('TripID', response.data.trip_id);
+                        // Optionally, navigate to another page or show a success message
+                        this.$router.push({ path: `/ticketSelling` });
+                    })
+                    .catch(error => {
+                        console.error('Error submitting trip:', error);
+                    });
+            } else {
+                console.log('AHHHHHHHH' + this.dead);
+
                 const currentDate = new Date();
                 const currentDateTime = currentDate.toISOString().split('T')[0]; // Convert to ISO string format
-
-                // Get the start time from localStorage and set it
                 const startTime = localStorage.getItem('startTime');
-
-                // Get route number from localStorage
                 const routeNumber = localStorage.getItem('selectedRouteRouteNum');
-
-                // Get end destination from localStorage
                 const endDestination = localStorage.getItem('selectedEndDestination');
-
-                // Get vehicle ID from localStorage
                 const vehicleId = localStorage.getItem('selectedVehicle');
-
-                // Get route ID from localStorage
-                const routeId = localStorage.getItem('selectedRoute');     
-
-                const dontLog = localStorage.getItem('dontLog');                
-
-                // Get current stop based on INBOUND value
+                const routeId = localStorage.getItem('selectedRoute');
+                const dontLog = localStorage.getItem('dontLog');
                 const isInbound = JSON.parse(localStorage.getItem('INBOUND')); // Assuming true/false value
-                // Get the current stop
-                const currentStop = isInbound
+
+                const currentStop = this.dead ? 'dead' : isInbound
                     ? localStorage.getItem('selectedRouteStop1')
                     : localStorage.getItem('selectedRouteStop2');
 
@@ -132,20 +159,20 @@ export default {
                 console.log(data);
 
                 // Make POST request using axios
-				if (dontLog !== 'true') {
-					axios.post('https://api.mybustimes.cc/api/trip/', data)
-						.then(response => {
-							console.log('Trip submitted successfully:', response.data);
-							localStorage.setItem('TripID', response.data.trip_id);
-							// Optionally, navigate to another page or show a success message
-							this.$router.push({ path: `/ticketSelling` });
-						})
-						.catch(error => {
-							console.error('Error submitting trip:', error);
-						});
-				} else {
-					this.$router.push({ path: `/ticketSelling` });
-				}
+                if (dontLog !== 'true') {
+                    axios.post('https://api.mybustimes.cc/api/trip/', data)
+                        .then(response => {
+                            console.log('Trip submitted successfully:', response.data);
+                            localStorage.setItem('TripID', response.data.trip_id);
+                            // Optionally, navigate to another page or show a success message
+                            this.$router.push({ path: `/ticketSelling` });
+                        })
+                        .catch(error => {
+                            console.error('Error submitting trip:', error);
+                        });
+                } else {
+                    this.$router.push({ path: `/ticketSelling` });
+                }
             }
         },
         logOff() {
