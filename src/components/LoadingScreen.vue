@@ -64,12 +64,6 @@ export default {
   right: 25px;
 }
 
-.loading-bar {
-  height: 100%;
-  background-color: #006aff;
-  transition: width 0.05s ease;
-}
-
 .loading-text {
   position: fixed;
   bottom: 50px; /* Show the text just above the loading bar */
