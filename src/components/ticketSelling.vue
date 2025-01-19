@@ -69,6 +69,10 @@ import { updateCurrentStop } from '@/update_currect_stop.js';
 export default {
     data() {
         return {
+            colours: ["#ff5453", "#ffdc53", "#2fdb42"], 
+            paxSeated: parseInt(localStorage.getItem("paxSeated")) || 0,
+            paxStanding: parseInt(localStorage.getItem("paxStanding")) || 0,
+            paxTotal: parseInt(localStorage.getItem("paxTotal")) || 0,
             zones: ['Other'],  // List of zones
             routeArray: [], // Holds the combined array
             currentIndexFrom: 0,
@@ -160,6 +164,13 @@ export default {
         this.updatePTags();
 
         this.updatePagination();
+    },
+    computed: {
+        // Compute the total capacity percentage
+        getCapPercent() {
+            const totalCap = this.paxSeated + this.paxStanding;
+            return totalCap > 0 ? (this.paxTotal / totalCap) * 100 : 0;
+        },
     },
     methods: {
         startInactivityTimer() {
@@ -349,7 +360,7 @@ export default {
                 document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
                 targetTicket.count = (targetTicket.count || 0) + 1;  // Ensure count is a number
                 document.getElementById('issue').style.zIndex = '2';
-                document.getElementById('issue').style.backgroundColor = '#1ec455';
+                document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
                 document.getElementById('issue').textContent = '£' + targetTicket.ticket_price.toFixed(2)
             }
@@ -371,13 +382,26 @@ export default {
             this.filteredTickets.forEach(t => {
                 t.count = 0;
             });
+            this.paxTotal = parseInt(localStorage.getItem("paxTotal") || 0); // Retrieve and parse to number
+            this.paxTotal += 1; // Increment the value
+            localStorage.setItem("paxTotal", this.paxTotal); // Save the updated value
             document.getElementById('ticketName').textContent = 'NO TICKET TO ISSUE';
             document.getElementById('issue').style.zIndex = '0';
             document.getElementById('issue').style.backgroundColor = '#c5c2c5';
             document.getElementById('issue').style.color = '#9d9c9d';
             document.getElementById('issue').textContent = 'READY';
         },
+        getBackgroundColour() {
+            const percentage = this.getCapPercent;
 
+            if (percentage >= 90) {
+                return this.colours[0]; // Red for 90% and above
+            } else if (percentage >= 75) {
+                return this.colours[1]; // Yellow for 75% to 90%
+            } else {
+                return this.colours[2]; // Green for below 75%
+            }
+        },
         navigateToOptions() {
             this.$router.push({ path: '/optionsMenu' });
         }

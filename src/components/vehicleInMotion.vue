@@ -3,10 +3,9 @@
         <h2>VEHICLE IN MOTION</h2>
         <h2>TAP SCREEN TO CONTINUE</h2>
 
-        <div class="passengers">PASSENGERS: {{ passengerCount }}</div>
+        <div class="passengers">PASSENGERS: {{ paxTotal }}</div>
 
         <h3>Next Stop: {{ nextStop }}</h3>
-
 
         <h3 class="lastStop">Last Stop: {{ lastStop }}</h3><br><br>
         <button class="issue" @click.stop="arriveAtStop">ARRIVED AT: <br> {{ nextStop }}</button>
@@ -19,7 +18,7 @@ import { updateCurrentStop } from '@/update_currect_stop.js';
 export default {
     data() {
         return {
-            passengerCount: 0,
+            paxTotal: parseInt(localStorage.getItem("paxTotal")) || 0,
             nextStop: 'STOP NAME',
             lastStop: 'STOP NAME',
         }

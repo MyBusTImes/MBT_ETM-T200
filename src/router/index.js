@@ -14,6 +14,8 @@ import messageSection from "../components/messages.vue";
 import message from "../components/message.vue";
 import vehicleInMotition from "../components/vehicleInMotion.vue";
 import loadTicketData from "../components/loadTicketData.vue";
+import passengerOccupany from "../components/passengerOccupany.vue";
+import vehicleConfig from "../components/vehicleConfig.vue";
 
 const routes = [
   {
@@ -85,12 +87,21 @@ const routes = [
     path: '/vehicleInMotition',
     name: 'vehicleInMotition',
     component: vehicleInMotition,
-  }
-  ,
+  },
   {
     path: '/loadTicketData',
     name: 'loadTicketData',
     component: loadTicketData,
+  },
+  {
+    path: '/passengerOccupany',
+    name: 'passengerOccupany',
+    component: passengerOccupany,
+  },
+  {
+    path: '/vehicleConfig',
+    name: 'vehicleConfig',
+    component: vehicleConfig,
   }
 ];
 

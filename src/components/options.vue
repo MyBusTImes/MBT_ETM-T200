@@ -2,17 +2,18 @@
     <div class="MainButtons">
         <div class="inline">
             <button>LOCK</button>
-            <button>PASSENGER<br>OCCUPANCY</button>
+            <button @click="gotTo('passengerOccupany')">PASSENGER<br>OCCUPANCY</button>
         </div>
         <div class="full">
             <button @click="endTrip">END TRIP</button>
         </div>
         <div class="inline">
-            <button>DUTY SUMMARY</button>
-            <button>TRIP SUMMARY</button>
+            <button @click="gotTo()">DUTY SUMMARY</button>
+            <button @click="gotTo()">TRIP SUMMARY</button>
         </div>
-        <div class="full">
-            <button @click="openMessages">MESSAGES</button>
+        <div class="inline">
+            <button @click="gotTo('messageSection')">MESSAGES</button>
+            <button @click="gotTo('vehicleConfig')">Vehicle Config</button>
         </div>
         <div class="full">
             <button @click="logOff">LOG OFF</button>
@@ -20,7 +21,7 @@
 
     </div>
     <div class="buttons">
-        <button class="optionBT" @click="navigateToOptions">BACK</button>
+        <button class="optionBT" @click="gotTo('ticketSelling')">BACK</button>
     </div>
 </template>
 
@@ -63,11 +64,8 @@ body {
 export default {
     name: 'OptionsComponent',
     methods: {
-        navigateToOptions() {
-            this.$router.push({ path: '/ticketSelling' });
-        },
-        openMessages() {
-            this.$router.push({ path: '/messageSection' });
+        gotTo(page) {
+            this.$router.push({ path: '/' + page });
         },
         endTrip() {
             const keysToRemove = ['tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedVehicle', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
