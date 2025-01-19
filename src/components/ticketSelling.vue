@@ -47,7 +47,7 @@
                 <p>{{ ticket.count || 0 }}</p> <!-- Use ticket.count here -->
             </div>
             <button @click="increaseCount(ticket)">+</button>
-            <p>{{ ticket.ticketer_name }}</p>
+            <p>{{ ticket.ticketer_name || ticket.ticket_name }}</p>
         </div>
     </div>
     <div v-else>
