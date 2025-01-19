@@ -170,7 +170,7 @@ export default {
                 this.inactivityTimer = setTimeout(() => {
                     console.log('test3');
                     this.$router.push({ path: '/vehicleInMotition' });
-                }, 10000); // 30 seconds
+                }, 30000); // 30 seconds
             }
         },
 
