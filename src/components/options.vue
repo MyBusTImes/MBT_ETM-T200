@@ -9,7 +9,7 @@
         </div>
         <div class="inline">
             <button @click="gotTo()">DUTY SUMMARY</button>
-            <button @click="gotTo()">TRIP SUMMARY</button>
+            <button @click="gotTo('tripSummary')">TRIP SUMMARY</button>
         </div>
         <div class="inline">
             <button @click="gotTo('messageSection')">MESSAGES</button>
@@ -68,7 +68,7 @@ export default {
             this.$router.push({ path: '/' + page });
         },
         endTrip() {
-            const keysToRemove = ['tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedVehicle', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
+            const keysToRemove = ['paxTotal', 'ticketDataArray', 'tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedVehicle', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
             keysToRemove.forEach(key => localStorage.removeItem(key));
             localStorage.setItem('InMotition', false);
 

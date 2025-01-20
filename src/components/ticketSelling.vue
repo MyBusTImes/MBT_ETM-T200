@@ -40,8 +40,9 @@
     </div>
 
     <div class="tickets" v-if="filteredTickets.length > 0">
-        <div class="ticket" v-for="ticket in currentPageTickets" :key="ticket.id">
-            <p>£{{ ticket.ticket_price }}</p>
+        <div class="ticket" v-for="ticket in currentPageTickets" :key="ticket.id"
+            :style="{ backgroundColor: ticket.ticketer_colour }">
+            <p>£{{ ticket.ticket_price.toFixed(2) }}</p>
             <button @click="decreaseCount(ticket)">-</button>
             <div class="count">
                 <p>{{ ticket.count || 0 }}</p> <!-- Use ticket.count here -->
@@ -69,7 +70,7 @@ import { updateCurrentStop } from '@/update_currect_stop.js';
 export default {
     data() {
         return {
-            colours: ["#ff5453", "#ffdc53", "#2fdb42"], 
+            colours: ["#ff5453", "#ffdc53", "#2fdb42"],
             paxSeated: parseInt(localStorage.getItem("paxSeated")) || 0,
             paxStanding: parseInt(localStorage.getItem("paxStanding")) || 0,
             paxTotal: parseInt(localStorage.getItem("paxTotal")) || 0,
@@ -93,6 +94,7 @@ export default {
             ticketsPerPage: 6, // Number of tickets per page
             totalPages: 1, // Total pages, defaulted to 1
             currentPageTickets: [],
+            ticketDataArray: JSON.parse(localStorage.getItem('ticketDataArray')) || [],
         };
     },
     mounted() {
@@ -106,7 +108,18 @@ export default {
         const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
 
         // Order tickets by ticket_price in ascending order (lowest to highest)
-        tickets.sort((a, b) => a.ticket_price - b.ticket_price);
+        tickets.sort((a, b) => {
+            // Move tickets with a ticket_price of 0 to the end
+            if (a.ticket_price === 0 || a.ticket_price === 0.0 || a.ticket_price === 0.00) {
+                return 1;
+            }
+            if (b.ticket_price === 0 || b.ticket_price === 0.0 || b.ticket_price === 0.00) {
+                return -1;
+            }
+
+            // Otherwise, sort by ticket_price in ascending order
+            return a.ticket_price - b.ticket_price;
+        });
 
         // Extract unique ticketer_cat values
         const uniqueCategories = [...new Set(tickets.map(ticket => ticket.ticketer_cat))];
@@ -126,7 +139,7 @@ export default {
 
 
         // Fetch data from localStorage (same as before)
-    
+
         this.InMotition = true;
         const INBOUND = localStorage.getItem('INBOUND');
         const routeStart = localStorage.getItem('selectedRouteStart');
@@ -174,12 +187,9 @@ export default {
     },
     methods: {
         startInactivityTimer() {
-            console.log(this.InMotition);
             // Set inactivity timer to redirect after 30 seconds
             if (this.InMotition) {
-                console.log('test2');
                 this.inactivityTimer = setTimeout(() => {
-                    console.log('test3');
                     this.$router.push({ path: '/vehicleInMotition' });
                 }, 30000); // 30 seconds
             }
@@ -295,14 +305,26 @@ export default {
             this.activeZone = index;
             const selectedZone = this.zones[index];
 
-            // Filter tickets by ticketer_cat and order by ticket_price (ascending)
+            // Filter tickets by ticketer_cat
             this.filteredTickets = this.tickets
                 .filter(ticket => ticket.ticketer_cat === selectedZone)
-                .sort((a, b) => a.ticket_price - b.ticket_price);  // Sort by ticket_price
+                .sort((a, b) => {
+                    // Move tickets with a ticket_price of 0 to the end
+                    if (a.ticket_price === 0 || a.ticket_price === 0.0 || a.ticket_price === 0.00) {
+                        return 1;
+                    }
+                    if (b.ticket_price === 0 || b.ticket_price === 0.0 || b.ticket_price === 0.00) {
+                        return -1;
+                    }
+
+                    // Otherwise, sort by ticket_price in ascending order
+                    return a.ticket_price - b.ticket_price;
+                });
 
             // Update pagination and current page tickets
             this.updatePagination();
         },
+
 
         updatePagination() {
             // Calculate the total pages
@@ -353,22 +375,41 @@ export default {
         // Decrease the count of the ticket
         increaseCount(ticket) {
             this.filteredTickets.forEach(t => {
-                t.count = 0;
+                if (t.id !== ticket.id) {
+                    t.count = 0;
+                }
             });
             const targetTicket = this.filteredTickets.find(t => t.id === ticket.id);
             if (targetTicket) {
-                document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
                 targetTicket.count = (targetTicket.count || 0) + 1;  // Ensure count is a number
+                this.totalPrice = targetTicket.ticket_price * targetTicket.count;
+                this.totalPrice = this.totalPrice.toFixed(2)
+                if (targetTicket.count > 1) {
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name + ' X' + targetTicket.count;
+                } else {
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
+                }
                 document.getElementById('issue').style.zIndex = '2';
                 document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
-                document.getElementById('issue').textContent = '£' + targetTicket.ticket_price.toFixed(2)
+                document.getElementById('issue').textContent = '£' + this.totalPrice;
             }
         },
         decreaseCount(ticket) {
             const targetTicket = this.filteredTickets.find(t => t.id === ticket.id);
             if (targetTicket && targetTicket.count > 0) {
                 targetTicket.count = (targetTicket.count || 0) - 1;  // Ensure count is a number
+                if (targetTicket.count > 1) {
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name + ' X' + targetTicket.count;
+                } else {
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
+                }
+                this.totalPrice = targetTicket.ticket_price * targetTicket.count;
+                this.totalPrice = this.totalPrice.toFixed(2)
+                document.getElementById('issue').style.zIndex = '2';
+                document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
+                document.getElementById('issue').style.color = '#ffffff';
+                document.getElementById('issue').textContent = '£' + this.totalPrice;
             }
             if (targetTicket && targetTicket.count === 0) {
                 document.getElementById('ticketName').textContent = 'NO TICKET TO ISSUE';
@@ -379,18 +420,64 @@ export default {
             }
         },
         issueTicket() {
+            // Ensure the array to store ticket data exists
+            if (!this.ticketDataArray) {
+                this.ticketDataArray = [];
+            }
+
+            // Loop through filtered tickets to find and handle the selected ticket
+            this.filteredTickets.forEach(t => {
+                if (t.count > 0) {
+                    this.ticketName = t.ticket_name;
+                    this.ticketPrice = t.ticket_price;
+                    this.totalPax = t.count;
+
+                    // Loop through the count of passengers to add multiple tickets
+                    for (let i = 0; i < t.count; i++) {
+                        // Prepare the ticket data to be added to the array
+                        const currentDate = new Date();
+                        const currentDateTime = currentDate.toISOString().split('.')[0];
+                        const soldAt = this.StopArray[this.currentIndexStop];
+                        const routeNumber = localStorage.getItem('selectedRouteRouteNum');
+                        const data = {
+                            saleTime: currentDateTime,
+                            route_number: routeNumber,
+                            ticket_name: this.ticketName,
+                            ticket_price: this.ticketPrice,
+                            soldAt: soldAt,
+                            tripID: this.tripId,
+                        };
+
+                        // Add the ticket data to the array
+                        this.ticketDataArray.push(data);
+                    }
+                }
+            });
+
+            // Reset ticket counts after processing
             this.filteredTickets.forEach(t => {
                 t.count = 0;
             });
-            this.paxTotal = parseInt(localStorage.getItem("paxTotal") || 0); // Retrieve and parse to number
-            this.paxTotal += 1; // Increment the value
-            localStorage.setItem("paxTotal", this.paxTotal); // Save the updated value
+
+            // Update the passenger total in localStorage
+            this.paxTotal = parseInt(localStorage.getItem("paxTotal") || 0);
+            this.paxTotal += this.totalPax;  // Adjust if needed (you can also add t.count here if you want to track total passengers)
+            localStorage.setItem("paxTotal", this.paxTotal);
+
+            // Save the array to localStorage as a JSON string
+            localStorage.setItem('ticketDataArray', JSON.stringify(this.ticketDataArray));
+
+            // Log the array to the console for debugging
+            console.log(JSON.stringify(this.ticketDataArray));
+
+            // Update UI
             document.getElementById('ticketName').textContent = 'NO TICKET TO ISSUE';
             document.getElementById('issue').style.zIndex = '0';
             document.getElementById('issue').style.backgroundColor = '#c5c2c5';
             document.getElementById('issue').style.color = '#9d9c9d';
             document.getElementById('issue').textContent = 'READY';
         },
+
         getBackgroundColour() {
             const percentage = this.getCapPercent;
 

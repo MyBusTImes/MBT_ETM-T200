@@ -16,6 +16,7 @@ import vehicleInMotition from "../components/vehicleInMotion.vue";
 import loadTicketData from "../components/loadTicketData.vue";
 import passengerOccupany from "../components/passengerOccupany.vue";
 import vehicleConfig from "../components/vehicleConfig.vue";
+import tripSummary from "../components/tripSummary.vue";
 
 const routes = [
   {
@@ -102,6 +103,11 @@ const routes = [
     path: '/vehicleConfig',
     name: 'vehicleConfig',
     component: vehicleConfig,
+  },
+  {
+    path: '/tripSummary',
+    name: 'tripSummary',
+    component: tripSummary,
   }
 ];
 
