@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoadingScreen from '../components/LoadingScreen.vue';
 import LoadingData from '../components/LoadingData.vue';
 import blank from "../components/blank.vue";
-import DriverLogin from "../components/Login.vue";
+import DriverLogin from "../components/DriverLogin.vue";
 import LoadUserData from "../components/LoadingUserData.vue";
 import CompanySelect from "../components/companySelect.vue";
 import VehicleSelect from "../components/VehicleSelect.vue";
@@ -17,6 +17,7 @@ import loadTicketData from "../components/loadTicketData.vue";
 import passengerOccupany from "../components/passengerOccupany.vue";
 import vehicleConfig from "../components/vehicleConfig.vue";
 import tripSummary from "../components/tripSummary.vue";
+import ticketReport from "../components/ticketReport.vue";
 
 const routes = [
   {
@@ -108,6 +109,11 @@ const routes = [
     path: '/tripSummary',
     name: 'tripSummary',
     component: tripSummary,
+  },
+  {
+    path: '/ticketReport',
+    name: 'ticketReport',
+    component: ticketReport,
   }
 ];
 

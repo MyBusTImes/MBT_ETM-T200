@@ -1,22 +1,25 @@
 <template>
     <div class="MainButtons">
         <div class="inline">
-            <button>LOCK</button>
-            <button @click="gotTo('passengerOccupany')">PASSENGER<br>OCCUPANCY</button>
+            <button @click="endTrip">END TRIP</button>
+            <button @click="logOff">LOG OFF</button>
         </div>
         <div class="full">
-            <button @click="endTrip">END TRIP</button>
+            <button>LOCK</button>
         </div>
         <div class="inline">
             <button @click="gotTo()">DUTY SUMMARY</button>
             <button @click="gotTo('tripSummary')">TRIP SUMMARY</button>
         </div>
+        <div class="full">
+            <button @click="gotTo('vehicleConfig')">VEHICLE CONFIG</button>
+        </div>
         <div class="inline">
             <button @click="gotTo('messageSection')">MESSAGES</button>
-            <button @click="gotTo('vehicleConfig')">Vehicle Config</button>
+            <button @click="gotTo('passengerOccupany')">PASSENGER<br>OCCUPANCY</button>
         </div>
         <div class="full">
-            <button @click="logOff">LOG OFF</button>
+            <button @click="gotTo('LoadUserData')">RELOAD ALL DATA</button>
         </div>
 
     </div>

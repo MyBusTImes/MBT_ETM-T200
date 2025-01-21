@@ -58,7 +58,7 @@
     <div class="buttons">
         <button class="optionBT" @click="navigateToOptions">OPTIONS</button>
         <button id="issue" style="z-index: 0;" class="issue" @click="issueTicket">READY</button><button
-            style="z-index: 1;" class="issue">SCAN TICKET</button>
+            style="z-index: 1;" class="issue" @click="gotTo('ticketReport')">SCAN TICKET</button>
         <button style="right: 12.5vw;" id="startStop" class="startBT" @click="prevPage">&lt;</button>
         <button id="startStop" class="startBT" @click="nextPage">&gt;</button>
         <!-- Pagination button -->
@@ -186,6 +186,9 @@ export default {
         },
     },
     methods: {
+        gotTo(page) {
+            this.$router.push({ path: '/' + page });
+        },
         startInactivityTimer() {
             // Set inactivity timer to redirect after 30 seconds
             if (this.InMotition) {

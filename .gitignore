@@ -23,5 +23,5 @@ pnpm-debug.log*
 *.sw?
 
 #login
-/src/components/Login.vue
+/src/components/DriverLogin.vue
 
