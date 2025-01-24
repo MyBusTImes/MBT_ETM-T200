@@ -57,8 +57,9 @@
 
     <div class="buttons">
         <button class="optionBT" @click="navigateToOptions">OPTIONS</button>
-        <button id="issue" style="z-index: 0;" class="issue" @click="issueTicket">READY</button><button
-            style="z-index: 1;" class="issue" @click="gotTo('ticketReport')">SCAN TICKET</button>
+        <button id="issue" style="z-index: 0;" class="issue" @click="issueTicket">READY</button>
+        <button class="issue" style="z-index: 1;" @click="gotTo('ticketReport')">SCAN TICKET</button>
+        <button class="issueALIGHT" :style="{zIndex: 2, backgroundColor: getBackgroundColour() }" @click="alight(1)">ALIGHT ({{ this.paxTotal }})</button>
         <button style="right: 12.5vw;" id="startStop" class="startBT" @click="prevPage">&lt;</button>
         <button id="startStop" class="startBT" @click="nextPage">&gt;</button>
         <!-- Pagination button -->
@@ -177,6 +178,8 @@ export default {
         this.updatePTags();
 
         this.updatePagination();
+
+        this.setActiveZone(0);
     },
     computed: {
         // Compute the total capacity percentage
@@ -186,6 +189,13 @@ export default {
         },
     },
     methods: {
+        alight(count) {
+            this.paxTotal = Math.max(this.paxTotal - count, 0);
+            this.saveToLocalStorage();
+        },
+        saveToLocalStorage() {
+            localStorage.setItem("paxTotal", this.paxTotal);
+        },
         gotTo(page) {
             this.$router.push({ path: '/' + page });
         },
@@ -392,7 +402,7 @@ export default {
                 } else {
                     document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
                 }
-                document.getElementById('issue').style.zIndex = '2';
+                document.getElementById('issue').style.zIndex = '3';
                 document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
                 document.getElementById('issue').textContent = '£' + this.totalPrice;
@@ -409,7 +419,7 @@ export default {
                 }
                 this.totalPrice = targetTicket.ticket_price * targetTicket.count;
                 this.totalPrice = this.totalPrice.toFixed(2)
-                document.getElementById('issue').style.zIndex = '2';
+                document.getElementById('issue').style.zIndex = '3';
                 document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
                 document.getElementById('issue').textContent = '£' + this.totalPrice;
@@ -501,14 +511,16 @@ export default {
 
 <style>
 .Zones .zone {
-    background-color: #004ab9;
-    color: white;
-    display: inline-block;
-    padding: 5px;
-    min-width: 100px;
-    text-align: center;
-    scroll-snap-align: center;
-    cursor: pointer;
+  background-color: #004ab9;
+  color: white;
+  display: inline-block;
+  padding: 5px;
+  padding-top: 5px;
+  min-width: 100px;
+  text-align: center;
+  scroll-snap-align: center;
+  cursor: pointer;
+  padding-top: 2%;
 }
 
 .Zones .zone.active {
@@ -522,8 +534,8 @@ export default {
     align-items: center;
     position: absolute;
     width: calc(100% - 20px);
-    top: calc(20vh - 5px);
-    height: 3vh;
+    top: calc(19vh - 5px);
+    height: 4vh;
     left: 10px;
 }
 
@@ -551,6 +563,7 @@ export default {
 }
 
 .swipe-container {
+    background: #004ab9;
     scrollbar-width: none;
     -ms-overflow-style: none;
     display: flex;
@@ -560,7 +573,7 @@ export default {
     padding: 0 5px;
     width: calc(90% - 20px);
     margin-left: calc(5% + 5px);
-    height: 3vh;
+    height: 4vh;
 }
 
 .left {
@@ -642,6 +655,16 @@ export default {
     width: calc(12.5vw - 5px);
     height: 7.5vh;
     font-size: 2.5vh;
+}
+
+.issueALIGHT {
+    background: #c5c2c5;
+    color: #ffffff;
+    font-size: 2.5vh;
+    position: fixed;
+    width: 50vw;
+    left: 25vw;
+    height: 7.5vh;
 }
 
 .issue {

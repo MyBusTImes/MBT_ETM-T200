@@ -18,6 +18,7 @@ import passengerOccupany from "../components/passengerOccupany.vue";
 import vehicleConfig from "../components/vehicleConfig.vue";
 import tripSummary from "../components/tripSummary.vue";
 import ticketReport from "../components/ticketReport.vue";
+import optionsMore from "../components/optionsMore.vue";
 
 const routes = [
   {
@@ -114,6 +115,11 @@ const routes = [
     path: '/ticketReport',
     name: 'ticketReport',
     component: ticketReport,
+  },
+  {
+    path: '/optionsMore',
+    name: 'optionsMore',
+    component: optionsMore,
   }
 ];
 

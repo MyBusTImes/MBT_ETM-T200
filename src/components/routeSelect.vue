@@ -62,6 +62,8 @@
 </style>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -72,7 +74,8 @@ export default {
             stopArray: 'test',
             stop2Array: '',
             selectedEndDestination: '', // Variable for storing selected end destination
-            endDestinations: [] // Array for storing split destinations
+            endDestinations: [], // Array for storing split destinations
+            vehicle: localStorage.getItem('selectedVehicle'),
         };
     },
     mounted() {
@@ -109,6 +112,101 @@ export default {
     },
 
     methods: {
+        submitTrip() {
+            localStorage.setItem('currentIndexStop', 1);
+            const dontLog = localStorage.getItem('dontLog');
+
+            console.log(this.dead);
+            if (dontLog === true) {
+                this.$router.push({ path: `/loadTicketData` });
+            } else if (this.dead) {
+                console.log('not ah' + this.dead);
+                const currentDate = new Date();
+                const currentDateTime = currentDate.toISOString();
+                const vehicleId = localStorage.getItem('selectedVehicle');
+                const currentStop = 'dead';
+
+                const data = {
+                    trip_date_time: `${currentDateTime}`,
+                    route_number: 'dead',
+                    end_destination: '',
+                    vehicle_id: vehicleId,
+                    route_id: null,
+                    InBound: '',
+                    current_stop: currentStop
+                };
+
+                console.log(data);
+                axios.post('https://api.mybustimes.cc/api/trip/', data)
+                    .then(response => {
+                        console.log('Trip submitted successfully:', response.data);
+                        localStorage.setItem('TripID', response.data.trip_id);
+                        // Optionally, navigate to another page or show a success message
+                        this.$router.push({ path: `/loadTicketData` });
+                    })
+                    .catch(error => {
+                        console.error('Error submitting trip:', error);
+                    });
+            } else {
+                console.log('AHHHHHHHH' + this.dead);
+
+                const currentDate = new Date();
+                const currentDateTime = currentDate.toISOString().split('T')[0]; // Convert to ISO string format
+                const startTime = localStorage.getItem('startTime');
+                const routeNumber = localStorage.getItem('selectedRouteRouteNum');
+                const endDestination = localStorage.getItem('selectedEndDestination');
+                const vehicleId = localStorage.getItem('selectedVehicle');
+                const routeId = localStorage.getItem('selectedRoute');
+                const dontLog = localStorage.getItem('dontLog');
+                const isInbound = JSON.parse(localStorage.getItem('INBOUND')); // Assuming true/false value
+
+                const currentStop = this.dead ? 'dead' : isInbound
+                    ? localStorage.getItem('selectedRouteStop1')
+                    : localStorage.getItem('selectedRouteStop2');
+ 
+                // Split the current stop into an array using \r\n as the separator
+                let stopArray = currentStop.split('\r\n');
+
+                // Set the last item of the array as the active one
+                const activeStop = stopArray[0];
+
+                // Optionally, you can store this active stop back into localStorage if needed
+                localStorage.setItem('activeRouteStop', activeStop);
+
+                // Output or use the active stop as needed
+                console.log(activeStop);
+
+
+                // Prepare the data for the POST request
+                const data = {
+                    trip_date_time: `${currentDateTime} ${startTime}`,
+                    route_number: routeNumber,
+                    end_destination: endDestination,
+                    vehicle_id: vehicleId,
+                    route_id: routeId,
+                    InBound: isInbound,
+                    current_stop: activeStop
+                };
+
+                console.log(data);
+
+                // Make POST request using axios
+                if (dontLog !== 'true') {
+                    axios.post('https://api.mybustimes.cc/api/trip/', data)
+                        .then(response => {
+                            console.log('Trip submitted successfully:', response.data);
+                            localStorage.setItem('TripID', response.data.trip_id);
+                            // Optionally, navigate to another page or show a success message
+                            this.$router.push({ path: `/loadTicketData` });
+                        })
+                        .catch(error => {
+                            console.error('Error submitting trip:', error);
+                        });
+                } else {
+                    this.$router.push({ path: `/loadTicketData` });
+                }
+            }
+        },
         selectTicket() {
             localStorage.setItem('dontLog', true);
             this.$router.push({ path: '/loadTicketData' });
@@ -116,8 +214,10 @@ export default {
         selectDead() {
             const popup3 = document.querySelector('.DeadPopup');
             popup3.style.display = 'block';
-            this.$router.push({ path: '/VehicleSelect' });
             localStorage.setItem('dead', true);
+            const dead = true;
+            this.dead = dead;
+            this.submitTrip();
         },
         close() {
             location.reload();
@@ -133,10 +233,12 @@ export default {
             }
         },
         dontLog() {
-            this.$router.push({ path: '/VehicleSelect' });
+            this.$router.push({ path: '/loadTicketData' });
             localStorage.setItem('dontLog', true);
         },
         selectRoute(Route) {
+            const dead = false;
+            this.dead = dead;
             // Split the stop and destination values into arrays
             const stop1Array = Route.start_destination;
             const stop2Array = Route.end_destination;
@@ -177,7 +279,7 @@ export default {
                 button3.removeEventListener('click', handleButton3Click);
                 localStorage.setItem('startTime', this.startTime);  // Use this.startTime instead of time.value
                 console.log(this.startTime)
-                this.$router.push({ path: '/VehicleSelect' });
+                this.submitTrip();
             };
 
             const handleButton4Click = () => {
@@ -214,7 +316,7 @@ export default {
         },
         logOff() {
             // Redirect the user to a login page or home page (if needed)
-            this.$router.push({ path: '/companySelect' });
+            this.$router.push({ path: '/vehicleSelect' });
         }
     }
 };

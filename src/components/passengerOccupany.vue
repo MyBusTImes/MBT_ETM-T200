@@ -104,6 +104,7 @@ export default {
     height: 7.5vh;
     font-size: 2.5vh;
 }
+
 .zero button {
     width: 100%;
     height: 100%;
@@ -118,12 +119,17 @@ export default {
 }
 
 .countPax {
-    position: relative;
+    position: fixed;
     width: 30vw;
-    padding: 0.5vw 0;
-    left: 10vw;
-    color: white;
+    left: 35vw;
+    color: #fff;
     font-size: 150%;
+    height: 15vh;
+    top: 25vh;
+}
+
+.countPax h3 {
+    margin: 15%;
 }
 
 .paxNum {

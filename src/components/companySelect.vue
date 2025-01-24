@@ -18,7 +18,7 @@ export default {
     data() {
         return {
             username: '', // Variable to store the username
-            companies: []  // Initialize companies array
+            companies: [],  // Initialize companies array
         };
     },
     mounted() {
@@ -41,7 +41,7 @@ export default {
             console.log(`Selected Company: ${companyName} | ${companyCode}`);
             // Store the selected company in localStorage if needed
             localStorage.setItem('selectedCompany', companyCode);
-            this.$router.push({ path: `/RouteSelect` });
+            this.$router.push({ path: `/VehicleSelect` });
         },
         logOff() {
             // Clear localStorage (persists across sessions)
