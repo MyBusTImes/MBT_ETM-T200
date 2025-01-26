@@ -1,7 +1,7 @@
 <template>
     <div class="stops">
         <div class="stop">
-            <span class="tag tag1" style="height: 5vh;">FROM</span>
+            <span class="tag tag1" style="height: 6vh;">FROM</span>
             <button class="prev-button terminus" @click="prevDestinationFrom">&lt;</button>
             <span class="terminus">
                 <p id="From">FROM</p>
@@ -9,7 +9,7 @@
             <button class="next-button terminus" @click="nextDestinationFrom">&gt;</button>
         </div>
         <div class="stop">
-            <span class="tag tag2" style="height: 5vh;">STOP</span>
+            <span class="tag tag2" style="height: 6vh;">STOP</span>
             <button class="prev-button stop1" @click="prevStop">&lt;</button>
             <span class="stop1">
                 <p id="Stop">STOP</p>
@@ -17,7 +17,7 @@
             <button class="next-button stop1" @click="nextStop">&gt;</button>
         </div>
         <div class="stop">
-            <span class="tag tag3" style="height: 5vh;">TO</span>
+            <span class="tag tag3" style="height: 6vh;">TO</span>
             <button class="prev-button terminus" @click="prevDestinationTo">&lt;</button>
             <span class="terminus">
                 <p id="To">TO</p>
@@ -42,7 +42,7 @@
     <div class="tickets" v-if="filteredTickets.length > 0">
         <div class="ticket" v-for="ticket in currentPageTickets" :key="ticket.id"
             :style="{ backgroundColor: ticket.ticketer_colour }">
-            <p>£{{ ticket.ticket_price.toFixed(2) }}</p>
+            <p style="margin-top: 10px;">£{{ ticket.ticket_price.toFixed(2) }}</p>
             <button @click="decreaseCount(ticket)">-</button>
             <div class="count">
                 <p>{{ ticket.count || 0 }}</p> <!-- Use ticket.count here -->
@@ -152,6 +152,8 @@ export default {
         const routeDest1Array = routeDest1 === 'null' || !routeDest1 ? [] : routeDest1.split(' - ').filter(item => item !== 'null');
         const routeDest2 = localStorage.getItem('selectedRouteDest2');
         const routeDest2Array = routeDest2 === 'null' || !routeDest2 ? [] : routeDest2.split(' - ').filter(item => item !== 'null');
+
+        console.log(routeStop1);
 
         this.tripId = TripID;
 
@@ -534,8 +536,8 @@ export default {
     align-items: center;
     position: absolute;
     width: calc(100% - 20px);
-    top: calc(19vh - 5px);
-    height: 4vh;
+    top: calc(25vh - 5px);
+    height: 5vh;
     left: 10px;
 }
 
@@ -570,10 +572,10 @@ export default {
     overflow-x: scroll;
     gap: 5px;
     scroll-snap-type: x mandatory;
-    padding: 0 5px;
-    width: calc(90% - 20px);
+    padding: 0 20px;
+    width: calc(90% - 60px);
     margin-left: calc(5% + 5px);
-    height: 4vh;
+    height: 5vh;
 }
 
 .left {
@@ -594,8 +596,9 @@ export default {
 
 .ticketToIssue {
     position: fixed;
-    top: calc(15vh + 2px);
+    top: 19vh;
     color: #828182;
+    font-size: 2vh;
 }
 
 .tickets {
@@ -606,21 +609,24 @@ export default {
     width: calc(100vw - 20px);
     left: 10px;
     right: 10px;
-    top: 22.5vh;
-    bottom: calc(18vh + 10px);
+    top: 30vh;
+    bottom: calc(20vh + 10px);
     font-size: 2vh;
 }
 
 .ticket {
-    max-height: calc(20vh - 10px);
-    border: 1px solid #000000;
+    max-height: 16.666vh;
     text-align: center;
     background-color: #c5c2c5;
 }
 
+.ticket .count p {
+    margin: 10px;
+}
+
 .ticket .count {
     display: inline-block;
-    margin: -10px 20px;
+    margin: -20px 20px;
     border: 1px black solid;
     width: 30%;
 }
@@ -634,6 +640,8 @@ export default {
 }
 
 .buttons {
+    background-color: white;
+    border-top: 5px solid white;
     position: fixed;
     bottom: calc(10vh + 5px);
     left: 0;
@@ -678,7 +686,7 @@ export default {
 }
 
 .prev-button {
-    margin-left: 20px;
+    margin-left: 30px;
 }
 
 .tag {
@@ -689,7 +697,7 @@ export default {
     text-orientation: mixed;
     text-align: center;
     writing-mode: vertical-rl;
-    font-size: 90%;
+    font-size: 1.5vh;
     transform: rotate(180deg);
 }
 
@@ -698,11 +706,11 @@ export default {
 }
 
 .tag2 {
-    top: calc(5vh + 10px);
+    top: calc(6vh + 10px);
 }
 
 .tag3 {
-    top: calc(10vh + 15px);
+    top: calc(12vh + 15px);
 }
 
 .stops {
@@ -715,12 +723,14 @@ export default {
 }
 
 .stop {
+    right: 5px;
+    position: relative;
     margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 5vh;
+    height: 6vh;
 }
 
 .stop button {
@@ -735,10 +745,10 @@ export default {
 }
 
 .stop p {
-    font-size: 100%;
+    font-size: 2vh;
     text-align: center;
     color: white;
-    margin-top: 15px;
+    margin-top: 2vh;
 }
 
 .terminus {

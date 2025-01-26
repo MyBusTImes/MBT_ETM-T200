@@ -1,5 +1,6 @@
 <template>
     <div class="vehicle" @click="goToTicketSelling">
+        <h2>{{ this.routeNum }}</h2>
         <h2>VEHICLE IN MOTION</h2>
         <h2>TAP SCREEN TO CONTINUE</h2>
 
@@ -7,7 +8,7 @@
 
         <h3>Next Stop: {{ nextStop }}</h3>
 
-        <h3 class="lastStop">Last Stop: {{ lastStop }}</h3><br><br>
+        <h3>Last Stop: {{ lastStop }}</h3><br><br>
         <button class="issue" @click.stop="arriveAtStop">ARRIVED AT: <br> {{ nextStop }}</button>
     </div>
 </template>
@@ -24,6 +25,7 @@ export default {
         }
     },
     mounted() {
+        this.routeNum = localStorage.getItem('selectedRouteRouteNum') ? 'SERVICE: ' + localStorage.getItem('selectedRouteRouteNum') : '';
         const TripID = localStorage.getItem('TripID');
         this.TripID = TripID
         // Ensure currentIndexStop is a valid number
@@ -39,6 +41,12 @@ export default {
         if (this.stopArray.length > 0 && this.currentIndexStop + 1 < this.stopArray.length) {
             this.nextStop = this.stopArray[this.currentIndexStop]; // Get next stop
             this.lastStop = this.stopArray[this.currentIndexStop - 1]; // Get last stop
+            if (this.nextStop.startsWith("M - ")) {
+                this.nextStop = this.nextStop.split("M - ")[1]; // Remove "M - " from next stop
+            }
+            if (this.lastStop && this.lastStop.startsWith("M - ")) {
+                this.lastStop = this.lastStop.split("M - ")[1]; // Remove "M - " from last stop
+            }
         } else {
             this.nextStop = 'No more stops'; // Fallback if no more stops are available
         }
@@ -54,6 +62,12 @@ export default {
             localStorage.setItem('currentIndexStop', this.currentIndexStop)
             this.nextStop = this.stopArray[this.currentIndexStop];
             this.lastStop = this.stopArray[this.currentIndexStop - 1]; // Get last stop
+            if (this.nextStop.startsWith("M - ")) {
+                this.nextStop = this.nextStop.split("M - ")[1]; // Remove "M - " from next stop
+            }
+            if (this.lastStop && this.lastStop.startsWith("M - ")) {
+                this.lastStop = this.lastStop.split("M - ")[1]; // Remove "M - " from last stop
+            }
         },
         goToTicketSelling() {
             this.$router.go(-1);
@@ -64,12 +78,13 @@ export default {
 
 
 <style>
-.lastStop{
+.lastStop {
     position: fixed;
     bottom: 20vh;
     text-align: center;
     width: 100vw;
 }
+
 .vehicle .issue {
     background-color: rgb(56, 56, 56);
     color: white;
@@ -83,7 +98,7 @@ export default {
 }
 
 .vehicle h2 {
-    margin-top: 10vh;
+    margin-top: 5vh;
 }
 
 .vehicle .passengers {

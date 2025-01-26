@@ -8,8 +8,9 @@
     </div>
     <div class="options">
         <div class="DefualtOption">
-            <button style="border-right: 5px white solid;" @click="selectTicket()">Ticket Selling</button><button
-                style="border-left: 5px white solid;" @click="selectDead()">Dead Run</button>
+            <button style="width: 33%; border-right: 5px white solid;" @click="selectTicket()">Ticket Selling</button>
+            <button style="width: 33%; border-left: 5px white solid;" @click="selectPreLogged()">Select Pre Logged</button>
+            <button style="width: 33%; border-left: 5px white solid;" @click="selectDead()">Dead Run</button>
         </div>
         <div v-for="Route in filteredRoutes" :key="Route.id" class="option">
             <button @click="selectRoute(Route)">{{ Route.route_num }} | {{ Route.start_destination }} | {{
@@ -210,6 +211,9 @@ export default {
         selectTicket() {
             localStorage.setItem('dontLog', true);
             this.$router.push({ path: '/loadTicketData' });
+        },
+        selectPreLogged() {
+            this.$router.push({ path: '/PreLogged' });
         },
         selectDead() {
             const popup3 = document.querySelector('.DeadPopup');
