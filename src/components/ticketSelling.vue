@@ -50,6 +50,15 @@
             <button @click="increaseCount(ticket)">+</button>
             <p>{{ ticket.ticketer_name || ticket.ticket_name }}</p>
         </div>
+        <div class="ticket1">
+
+        </div>
+        <div class="ticket1">
+
+        </div>
+        <div class="ticket1">
+
+        </div>
     </div>
     <div v-else>
         <p>No tickets available for this zone.</p>
@@ -224,7 +233,7 @@ export default {
             const trackingImg = document.getElementById('Tracking');
             const dontLog = localStorage.getItem('dontLog');
             if (!dontLog) {
-                trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_a378d6b4fb_o_d.png';
+                trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
             }
             // Ensure the routeArray has content
             if (this.routeArray.length) {
@@ -618,8 +627,14 @@ export default {
     font-size: 2vh;
 }
 
+.ticket1 {
+    height: 15vh;
+    text-align: center;
+    background-color: #ffffff;
+}
+
 .ticket {
-    max-height: 16.666vh;
+    height: 15vh;
     text-align: center;
     background-color: #c5c2c5;
 }

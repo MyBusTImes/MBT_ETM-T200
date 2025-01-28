@@ -24,7 +24,7 @@
         <p class="messagesNum">Paper</p>
       </div>
       <div class="status-item">
-        <img src="https://live.staticflickr.com/65535/54265089689_fcd864d237_o_d.png" alt="Tracking" id="Tracking">
+        <img src="https://live.staticflickr.com/65535/54265089689_a99f484562_o_d.png" alt="Tracking" id="Tracking">
         <p class="messagesNum">Tracking</p>
       </div>
     </div>
@@ -67,9 +67,9 @@ export default {
   methods: {
     getImageSrc(messages) {
       if (messages === 0) {
-        return 'https://live.staticflickr.com/65535/54262843340_988c73e09e_o_d.png';
+        return 'https://live.staticflickr.com/65535/54262843340_7afe33a4e3_o_d.png';
       } else {
-        return 'https://live.staticflickr.com/65535/54264885401_932921103d_o_d.png';
+        return 'https://live.staticflickr.com/65535/54264885401_99629c9803_o_d.png';
       }
     },
     toggleVisibility() {
@@ -86,9 +86,9 @@ export default {
       if (randomSignal < 10) {
         this.printerImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
       } else if (randomSignal < 40) {
-        this.printerImage = 'https://live.staticflickr.com/65535/54262843335_2b52f87b6f_o_d.png';
+        this.printerImage = 'https://live.staticflickr.com/65535/54262843335_997362a3f3_o_d.png';
       } else {
-        this.printerImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+        this.printerImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
       }
     },
     checkLocationPermission() {
@@ -113,13 +113,13 @@ export default {
       const accuracy = position.coords.accuracy;
       if (accuracy < 10) {
         this.gpsStrength = 3;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
       } else if (accuracy < 50) {
         this.gpsStrength = 2;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54262661674_f182df8274_o_d.png';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54262661674_348b293572_o_d.png';
       } else if (accuracy < 100) {
         this.gpsStrength = 1;
-        this.gpsImage = 'https://live.staticflickr.com/65535/54261533367_2c09f08a7f_o_d.png';
+        this.gpsImage = 'https://live.staticflickr.com/65535/54261533367_c04bc3c716_o_d.png';
       } else {
         this.gpsStrength = 0;
         this.gpsImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
@@ -130,11 +130,11 @@ export default {
       const domComplete = performance.timing.domComplete;
       const loadTime = domComplete - navigationStart;
       if (loadTime < 1000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+        this.wifiImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
       } else if (loadTime < 2000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54262423506_4e89c983c4_o_d.png';
+        this.wifiImage = 'https://live.staticflickr.com/65535/54262661674_348b293572_o_d.png';
       } else if (loadTime < 5000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54261533367_2c09f08a7f_o_d.png';
+        this.wifiImage = 'https://live.staticflickr.com/65535/54261533367_c04bc3c716_o_d.png';
       } else {
         this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
       }
