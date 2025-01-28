@@ -5,27 +5,27 @@
     </div>
 
     <div class="status">
-      <div class="status-item">
+      <div style="left: 12.5vw;" class="status-item">
         <!-- https://live.staticflickr.com/65535/54264885401_932921103d_o_d.png-->
         <img :src="getImageSrc(messages)" alt="Status Icon 1">
-        <p style="transform: translate(0%, -200%);margin-bottom: -30%;" class="messagesNum">{{ messages }}</p>
-        <p class="messagesNum">Messages</p>
+        <p class="messagesNum">{{ messages }}</p>
+        <img class="status-logo" src="@/assets/Mail.png" alt="">
       </div>
-      <div class="status-item">
+      <div style="left: 22.5vw;" class="status-item">
         <img :src="gpsImage" alt="GPS Signal" id="gps">
-        <p class="messagesNum">GPS</p>
+        <img class="status-logo" src="@/assets/GPS.png" alt="">
       </div>
-      <div class="status-item">
+      <div style="left: 32.5vw;" class="status-item">
         <img :src="wifiImage" alt="Wi-Fi Signal" id="Wi-Fi">
-        <p class="messagesNum">Wi-Fi</p>
+        <img src="@/assets/Globe.png" alt="">
       </div>
-      <div class="status-item">
+      <div style="left: 42.5vw;" class="status-item">
         <img :src="printerImage" alt="Printer Signal" id="Printer">
-        <p class="messagesNum">Paper</p>
+        <img class="status-logo" src="@/assets/Printer.png" alt="">
       </div>
-      <div class="status-item">
+      <div style="left: 52.5vw;" class="status-item">
         <img src="https://live.staticflickr.com/65535/54265089689_a99f484562_o_d.png" alt="Tracking" id="Tracking">
-        <p class="messagesNum">Tracking</p>
+        <img class="status-logo" src="@/assets/Tracking.png" alt="">
       </div>
     </div>
 
@@ -157,33 +157,40 @@ export default {
 
 <style scoped>
 .status {
-  margin-top: 10px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 50%;
-  margin: 0 auto;
+  width: 50vw;
+  position: absolute;
+  left: calc(12.5vw + 20px);
+  bottom: 0vh;
+  right: 25vw;
+  height: 10vh;
 }
-
 .status-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 18%; /* Adjusted width for all items to fit 5 icons */
+  position: fixed;
+  width: 8vh; /* Adjusted width for all items to fit 5 icons */
+  height: 10vh;
+  bottom: -2vh;
 }
 
 .status img {
-  max-width: 50px;
-  width: 50%; /* Adjust the width of the images */
-  height: auto;
+  position: relative;
+  bottom: 5px;
+  max-width: 45%;
+  width: 100%; /* Adjust the width of the images */
   object-fit: contain;
 }
 
 .messagesNum {
   color: white;
-  margin-top: 5px;
-  font-size: 1rem;
+  font-size: 2vh;
+  bottom: 5.5vh;
+  z-index: 10;
   text-align: center;
+  position: fixed;
+  margin: 0;
 }
 
 .time {
@@ -223,6 +230,36 @@ export default {
   text-align: center;
 }
 
+.logo {
+  height: 12.5vw;
+  width: 12.5vw;
+  position: fixed;
+  left: 10px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  height: 10vh;
+  width: 100vw;
+  background: black;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.footerTime {
+  position: fixed;
+  color: white;
+  text-align: right;
+  font-size: 2rem;
+  right: 10px;
+  cursor: pointer;
+}
+
+
 /* Media Queries for Responsiveness */
 @media (max-width: 740px) {
   .time h2 {
@@ -241,74 +278,29 @@ export default {
   }
 }
 
-.footer {
-  position: fixed;
-  bottom: 0;
-  height: 10vh;
-  width: 100vw;
-  background: black;
-  left: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
+@media (max-width: 450px) {
+  .time h2 {
+    top: 12.5vw;
+    margin-left: -15px;
+  }
 }
 
-.logo {
-  height: 10vh;
-  width: 10vh;
-  position: fixed;
-  left: 10px;
+@media (max-width: 380px) {
+  .time h2 {
+    top: 15vw;
+    margin-left: -15px;
+  }
 }
 
-.footerTime {
-  position: fixed;
-  color: white;
-  text-align: right;
-  font-size: 2rem;
-  right: 10px;
-  cursor: pointer;
-}
 
 /* Media Queries */
 @media (max-width: 768px) {
-  .footer {
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .logo {
-    height: 8vh;
-    width: 8vh;
-  }
-
-  .status {
-    width: 80%; /* Adjust width on smaller screens */
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .status-item {
-    width: 20%; /* Adjust item width */
-  }
-
   .footerTime {
     font-size: 1.2rem;
   }
 }
 
 @media (max-width: 600px) {
-  .status {
-    margin-left: 17%;
-    width: 60%;
-    margin-top: 25px;
-  }
-  .messagesNum{
-    font-size: 15%;
-  }
-  .status-item {
-    width: 20%; /* Adjust item width */
-  }
   .footerTime {
     font-size: 1rem;
   }
