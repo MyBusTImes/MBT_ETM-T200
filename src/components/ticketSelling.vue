@@ -59,7 +59,8 @@
         <button class="optionBT" @click="navigateToOptions">OPTIONS</button>
         <button id="issue" style="z-index: 0;" class="issue" @click="issueTicket">READY</button>
         <button class="issue" style="z-index: 1;" @click="gotTo('ticketReport')">SCAN TICKET</button>
-        <button class="issueALIGHT" :style="{zIndex: 2, backgroundColor: getBackgroundColour() }" @click="alight(1)">ALIGHT ({{ this.paxTotal }})</button>
+        <button class="issueALIGHT" :style="{ zIndex: 2, backgroundColor: getBackgroundColour() }"
+            @click="alight(1)">ALIGHT ({{ this.paxTotal }})</button>
         <button style="right: 12.5vw;" id="startStop" class="startBT" @click="prevPage">&lt;</button>
         <button id="startStop" class="startBT" @click="nextPage">&gt;</button>
         <!-- Pagination button -->
@@ -100,7 +101,7 @@ export default {
     },
     mounted() {
         console.log(this.currentIndexStop),
-            this.startInactivityTimer();
+            this.startInactivityTimer(true);
 
         // Setting up event listeners for user activity
         window.addEventListener('mousemove', this.resetInactivityTimer);
@@ -201,9 +202,10 @@ export default {
         gotTo(page) {
             this.$router.push({ path: '/' + page });
         },
-        startInactivityTimer() {
-            // Set inactivity timer to redirect after 30 seconds
-            if (this.InMotition) {
+        startInactivityTimer(InMotition) {
+            // Check if the current route is 'ticketSelling'
+            if (InMotition) {
+                // Set inactivity timer to redirect after 30 seconds
                 this.inactivityTimer = setTimeout(() => {
                     this.$router.push({ path: '/vehicleInMotition' });
                 }, 30000); // 30 seconds
@@ -213,7 +215,9 @@ export default {
         resetInactivityTimer() {
             // Clear the previous timer and restart the countdown
             clearTimeout(this.inactivityTimer);
-            this.startInactivityTimer();
+            if (this.$route.name === 'ticketSelling') {
+                this.startInactivityTimer(true);
+            }
         },
 
         updatePTags() {
@@ -513,16 +517,16 @@ export default {
 
 <style>
 .Zones .zone {
-  background-color: #004ab9;
-  color: white;
-  display: inline-block;
-  padding: 5px;
-  padding-top: 5px;
-  min-width: 100px;
-  text-align: center;
-  scroll-snap-align: center;
-  cursor: pointer;
-  padding-top: 2%;
+    background-color: #004ab9;
+    color: white;
+    display: inline-block;
+    padding: 5px;
+    padding-top: 5px;
+    min-width: 100px;
+    text-align: center;
+    scroll-snap-align: center;
+    cursor: pointer;
+    padding-top: 2%;
 }
 
 .Zones .zone.active {

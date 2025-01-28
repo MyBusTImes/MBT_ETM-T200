@@ -93,7 +93,7 @@ export default {
             });
 
             // Redirect the user to a login page or home page (if needed)
-            window.location.href = '/DriverLogin'; // Or replace with your desired route
+            this.$router.push({ path: '/DriverLogin' }); // Or replace with your desired route
         },
     }
 }

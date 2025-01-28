@@ -50,9 +50,9 @@
     overflow: hidden;
     text-align: center;
     position: absolute;
-    width: 50%;
-    left: calc(25%);
-    bottom: 100px;
+    width: 100%;
+    bottom: 10vh;
+    left: 0;
 }
 
 .terminal-line {
@@ -81,6 +81,7 @@ export default {
     name: 'LoadingUserData',
     data() {
         return {
+            InMotition: false,
             companies: [],
             allRoutes: [],
             allFleets: [],
@@ -91,6 +92,7 @@ export default {
             companyIntervalId: null,
             routeIntervalId: null,
             fleetIntervalId: null,
+            
         };
     },
     async mounted() {

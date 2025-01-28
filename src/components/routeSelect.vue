@@ -224,7 +224,7 @@ export default {
             this.submitTrip();
         },
         close() {
-            location.reload();
+            this.$router.push({ path: '/routeSelect' });
         },
         filterRoutes(companyCode) {
             if (companyCode) {
