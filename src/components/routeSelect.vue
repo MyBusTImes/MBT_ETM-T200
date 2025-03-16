@@ -224,7 +224,7 @@ export default {
             this.submitTrip();
         },
         close() {
-            location.reload(); 
+            location.reload();
         },
         filterRoutes(companyCode) {
             if (companyCode) {

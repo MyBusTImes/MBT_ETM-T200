@@ -597,8 +597,7 @@ button {
     padding: 0 20px;
     width: calc(90% - 60px);
     margin-left: calc(5% + 5px);
-    height: 5vh;
-    max-height: 40px;
+    height: 3vh;
 }
 
 .left {
