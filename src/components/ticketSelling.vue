@@ -1,7 +1,7 @@
 <template>
     <div class="stops">
         <div class="stop">
-            <span class="tag tag1" style="height: 5vh;">FROM</span>
+            <span class="tag tag1" style="height: 6vh;">FROM</span>
             <button class="prev-button terminus" @click="prevDestinationFrom">&lt;</button>
             <span class="terminus">
                 <p id="From">FROM</p>
@@ -9,7 +9,7 @@
             <button class="next-button terminus" @click="nextDestinationFrom">&gt;</button>
         </div>
         <div class="stop">
-            <span class="tag tag2" style="height: 5vh;">STOP</span>
+            <span class="tag tag2" style="height: 6vh;">STOP</span>
             <button class="prev-button stop1" @click="prevStop">&lt;</button>
             <span class="stop1">
                 <p id="Stop">STOP</p>
@@ -17,7 +17,7 @@
             <button class="next-button stop1" @click="nextStop">&gt;</button>
         </div>
         <div class="stop">
-            <span class="tag tag3" style="height: 5vh;">TO</span>
+            <span class="tag tag3" style="height: 6vh;">TO</span>
             <button class="prev-button terminus" @click="prevDestinationTo">&lt;</button>
             <span class="terminus">
                 <p id="To">TO</p>
@@ -42,13 +42,22 @@
     <div class="tickets" v-if="filteredTickets.length > 0">
         <div class="ticket" v-for="ticket in currentPageTickets" :key="ticket.id"
             :style="{ backgroundColor: ticket.ticketer_colour }">
-            <p>£{{ ticket.ticket_price.toFixed(2) }}</p>
+            <p style="margin-top: 10px;">£{{ ticket.ticket_price.toFixed(2) }}</p>
             <button @click="decreaseCount(ticket)">-</button>
             <div class="count">
                 <p>{{ ticket.count || 0 }}</p> <!-- Use ticket.count here -->
             </div>
             <button @click="increaseCount(ticket)">+</button>
             <p>{{ ticket.ticketer_name || ticket.ticket_name }}</p>
+        </div>
+        <div class="ticket1">
+
+        </div>
+        <div class="ticket1">
+
+        </div>
+        <div class="ticket1">
+
         </div>
     </div>
     <div v-else>
@@ -57,8 +66,10 @@
 
     <div class="buttons">
         <button class="optionBT" @click="navigateToOptions">OPTIONS</button>
-        <button id="issue" style="z-index: 0;" class="issue" @click="issueTicket">READY</button><button
-            style="z-index: 1;" class="issue" @click="gotTo('ticketReport')">SCAN TICKET</button>
+        <button id="issue" style="z-index: 0;" class="issue" @click="issueTicket">READY</button>
+        <button class="issue" style="z-index: 1;" @click="gotTo('ticketReport')">SCAN TICKET</button>
+        <button class="issueALIGHT" :style="{ zIndex: 2, backgroundColor: getBackgroundColour() }"
+            @click="alight(1)">ALIGHT ({{ this.paxTotal }})</button>
         <button style="right: 12.5vw;" id="startStop" class="startBT" @click="prevPage">&lt;</button>
         <button id="startStop" class="startBT" @click="nextPage">&gt;</button>
         <!-- Pagination button -->
@@ -99,7 +110,7 @@ export default {
     },
     mounted() {
         console.log(this.currentIndexStop),
-            this.startInactivityTimer();
+            this.startInactivityTimer(true);
 
         // Setting up event listeners for user activity
         window.addEventListener('mousemove', this.resetInactivityTimer);
@@ -152,6 +163,8 @@ export default {
         const routeDest2 = localStorage.getItem('selectedRouteDest2');
         const routeDest2Array = routeDest2 === 'null' || !routeDest2 ? [] : routeDest2.split(' - ').filter(item => item !== 'null');
 
+        console.log(routeStop1);
+
         this.tripId = TripID;
 
         const routeStop1Array = routeStop1 === 'null' || !routeStop1 ? [] : routeStop1.split('\r\n').filter(item => item !== 'null');
@@ -177,6 +190,8 @@ export default {
         this.updatePTags();
 
         this.updatePagination();
+
+        this.setActiveZone(0);
     },
     computed: {
         // Compute the total capacity percentage
@@ -186,12 +201,20 @@ export default {
         },
     },
     methods: {
+        alight(count) {
+            this.paxTotal = Math.max(this.paxTotal - count, 0);
+            this.saveToLocalStorage();
+        },
+        saveToLocalStorage() {
+            localStorage.setItem("paxTotal", this.paxTotal);
+        },
         gotTo(page) {
             this.$router.push({ path: '/' + page });
         },
-        startInactivityTimer() {
-            // Set inactivity timer to redirect after 30 seconds
-            if (this.InMotition) {
+        startInactivityTimer(InMotition) {
+            // Check if the current route is 'ticketSelling'
+            if (InMotition) {
+                // Set inactivity timer to redirect after 30 seconds
                 this.inactivityTimer = setTimeout(() => {
                     this.$router.push({ path: '/vehicleInMotition' });
                 }, 30000); // 30 seconds
@@ -201,14 +224,16 @@ export default {
         resetInactivityTimer() {
             // Clear the previous timer and restart the countdown
             clearTimeout(this.inactivityTimer);
-            this.startInactivityTimer();
+            if (this.$route.name === 'ticketSelling') {
+                this.startInactivityTimer(true);
+            }
         },
 
         updatePTags() {
             const trackingImg = document.getElementById('Tracking');
             const dontLog = localStorage.getItem('dontLog');
             if (!dontLog) {
-                trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_a378d6b4fb_o_d.png';
+                trackingImg.src = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
             }
             // Ensure the routeArray has content
             if (this.routeArray.length) {
@@ -392,7 +417,7 @@ export default {
                 } else {
                     document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
                 }
-                document.getElementById('issue').style.zIndex = '2';
+                document.getElementById('issue').style.zIndex = '3';
                 document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
                 document.getElementById('issue').textContent = '£' + this.totalPrice;
@@ -409,7 +434,7 @@ export default {
                 }
                 this.totalPrice = targetTicket.ticket_price * targetTicket.count;
                 this.totalPrice = this.totalPrice.toFixed(2)
-                document.getElementById('issue').style.zIndex = '2';
+                document.getElementById('issue').style.zIndex = '3';
                 document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
                 document.getElementById('issue').textContent = '£' + this.totalPrice;
@@ -500,15 +525,25 @@ export default {
 </script>
 
 <style>
+html, body, template, #app {
+    touch-action: manipulation;
+}
+
+button {
+    touch-action: manipulation;
+}
+
 .Zones .zone {
     background-color: #004ab9;
     color: white;
     display: inline-block;
     padding: 5px;
+    padding-top: 5px;
     min-width: 100px;
     text-align: center;
     scroll-snap-align: center;
     cursor: pointer;
+    padding-top: 2%;
 }
 
 .Zones .zone.active {
@@ -522,9 +557,10 @@ export default {
     align-items: center;
     position: absolute;
     width: calc(100% - 20px);
-    top: calc(20vh - 5px);
-    height: 3vh;
+    top: calc(25vh - 5px);
+    height: 5vh;
     left: 10px;
+    max-height: 40px;
 }
 
 .swipe-container {
@@ -551,16 +587,18 @@ export default {
 }
 
 .swipe-container {
+    background: #004ab9;
     scrollbar-width: none;
     -ms-overflow-style: none;
     display: flex;
     overflow-x: scroll;
     gap: 5px;
     scroll-snap-type: x mandatory;
-    padding: 0 5px;
-    width: calc(90% - 20px);
+    padding: 0 20px;
+    width: calc(90% - 60px);
     margin-left: calc(5% + 5px);
-    height: 3vh;
+    height: 5vh;
+    max-height: 40px;
 }
 
 .left {
@@ -581,8 +619,9 @@ export default {
 
 .ticketToIssue {
     position: fixed;
-    top: calc(15vh + 2px);
+    top: 19vh;
     color: #828182;
+    font-size: 2vh;
 }
 
 .tickets {
@@ -593,21 +632,30 @@ export default {
     width: calc(100vw - 20px);
     left: 10px;
     right: 10px;
-    top: 22.5vh;
-    bottom: calc(18vh + 10px);
+    top: 30vh;
+    bottom: calc(20vh + 10px);
     font-size: 2vh;
 }
 
+.ticket1 {
+    height: 15vh;
+    text-align: center;
+    background-color: #ffffff;
+}
+
 .ticket {
-    max-height: calc(20vh - 10px);
-    border: 1px solid #000000;
+    height: 15vh;
     text-align: center;
     background-color: #c5c2c5;
 }
 
+.ticket .count p {
+    margin: 10px;
+}
+
 .ticket .count {
     display: inline-block;
-    margin: -10px 20px;
+    margin: -20px 20px;
     border: 1px black solid;
     width: 30%;
 }
@@ -621,6 +669,8 @@ export default {
 }
 
 .buttons {
+    background-color: white;
+    border-top: 5px solid white;
     position: fixed;
     bottom: calc(10vh + 5px);
     left: 0;
@@ -644,6 +694,16 @@ export default {
     font-size: 2.5vh;
 }
 
+.issueALIGHT {
+    background: #c5c2c5;
+    color: #ffffff;
+    font-size: 2.5vh;
+    position: fixed;
+    width: 50vw;
+    left: 25vw;
+    height: 7.5vh;
+}
+
 .issue {
     background: #c5c2c5;
     color: #9d9c9d;
@@ -655,7 +715,7 @@ export default {
 }
 
 .prev-button {
-    margin-left: 20px;
+    margin-left: 30px;
 }
 
 .tag {
@@ -666,7 +726,7 @@ export default {
     text-orientation: mixed;
     text-align: center;
     writing-mode: vertical-rl;
-    font-size: 90%;
+    font-size: 1.5vh;
     transform: rotate(180deg);
 }
 
@@ -675,11 +735,11 @@ export default {
 }
 
 .tag2 {
-    top: calc(5vh + 10px);
+    top: calc(6vh + 10px);
 }
 
 .tag3 {
-    top: calc(10vh + 15px);
+    top: calc(12vh + 15px);
 }
 
 .stops {
@@ -692,12 +752,14 @@ export default {
 }
 
 .stop {
+    right: 5px;
+    position: relative;
     margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 5vh;
+    height: 6vh;
 }
 
 .stop button {
@@ -712,10 +774,10 @@ export default {
 }
 
 .stop p {
-    font-size: 100%;
+    font-size: 2vh;
     text-align: center;
     color: white;
-    margin-top: 15px;
+    margin-top: 2vh;
 }
 
 .terminus {

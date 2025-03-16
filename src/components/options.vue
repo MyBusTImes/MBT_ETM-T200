@@ -1,30 +1,31 @@
 <template>
     <div class="MainButtons">
         <div class="inline">
-            <button @click="endTrip">END TRIP</button>
+            <button>LOCK</button>
             <button @click="logOff">LOG OFF</button>
         </div>
         <div class="full">
-            <button>LOCK</button>
+            <button @click="endTrip">END TRIP</button>
         </div>
         <div class="inline">
             <button @click="gotTo()">DUTY SUMMARY</button>
             <button @click="gotTo('tripSummary')">TRIP SUMMARY</button>
         </div>
         <div class="full">
-            <button @click="gotTo('vehicleConfig')">VEHICLE CONFIG</button>
+            <button @click="gotTo('messageSection')">MESSAGES</button>
         </div>
         <div class="inline">
-            <button @click="gotTo('messageSection')">MESSAGES</button>
+            <button @click="gotTo('scanTicket')">SCAN TICKET</button>
             <button @click="gotTo('passengerOccupany')">PASSENGER<br>OCCUPANCY</button>
         </div>
         <div class="full">
-            <button @click="gotTo('LoadUserData')">RELOAD ALL DATA</button>
+            
         </div>
 
     </div>
     <div class="buttons">
         <button class="optionBT" @click="gotTo('ticketSelling')">BACK</button>
+        <button class="startBT" style="width: 25vw;" @click="gotTo('optionsMore')">MORE</button>
     </div>
 </template>
 
@@ -71,7 +72,7 @@ export default {
             this.$router.push({ path: '/' + page });
         },
         endTrip() {
-            const keysToRemove = ['paxTotal', 'ticketDataArray', 'tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedVehicle', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
+            const keysToRemove = ['paxTotal', 'ticketDataArray', 'tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
             keysToRemove.forEach(key => localStorage.removeItem(key));
             localStorage.setItem('InMotition', false);
 
@@ -92,7 +93,7 @@ export default {
             });
 
             // Redirect the user to a login page or home page (if needed)
-            window.location.href = '/DriverLogin'; // Or replace with your desired route
+            this.$router.push({ path: '/DriverLogin' }); // Or replace with your desired route
         },
     }
 }

@@ -5,21 +5,6 @@
             <p>Please wait a few moments...</p>
         </div>
         <p v-if="loading" class="loading-text">Loading...</p>
-        <div class="terminal-view">
-            <div class="hideme">
-                <div v-for="(companies, index) in visibleCompanies" :key="index" class="terminal-line-1">
-                    {{ companies.operator_name }} | {{ companies.operator_code }}
-                </div>
-            </div>
-            <div class="hideme1">
-                <div v-for="(route, index) in visibleRoutes" :key="index" class="terminal-line">
-                    {{ route.route_num }} | {{ route.start_destination }} | {{ route.route_operator }}
-                </div>
-            </div>
-            <div v-for="(fleet, index) in visibleFleets" :key="index" class="terminal-line">
-                {{ fleet.reg }} | {{ fleet.fleet_number }} | {{ fleet.operator_code }}
-            </div>
-        </div>
     </div>
 </template>
 
@@ -50,9 +35,9 @@
     overflow: hidden;
     text-align: center;
     position: absolute;
-    width: 50%;
-    left: calc(25%);
-    bottom: 100px;
+    width: 100%;
+    bottom: 10vh;
+    left: 0;
 }
 
 .terminal-line {
@@ -81,6 +66,7 @@ export default {
     name: 'LoadingUserData',
     data() {
         return {
+            InMotition: false,
             companies: [],
             allRoutes: [],
             allFleets: [],
@@ -91,6 +77,7 @@ export default {
             companyIntervalId: null,
             routeIntervalId: null,
             fleetIntervalId: null,
+            
         };
     },
     async mounted() {
@@ -134,8 +121,6 @@ export default {
             localStorage.setItem('routes', JSON.stringify(this.allRoutes));
 
             localStorage.setItem('fleets', JSON.stringify(this.allFleets));
-
-            this.startScrollingCompanies();
         } catch (error) {
             console.error('Failed to fetch data:', error);
             alert('Failed to load data. Please try again later.');
@@ -163,48 +148,7 @@ export default {
             } catch (error) {
                 console.error(`Failed to fetch fleet for operator ${operatorCode}:`, error);
             }
-        },
-        startScrollingCompanies() {
-            let startIndex = 0;
-            this.companyIntervalId = setInterval(() => {
-                if (startIndex + 4 <= this.companies.length) {
-                    this.visibleCompanies = this.companies.slice(startIndex, startIndex + 4);
-                    startIndex++;
-                } else {
-                    if (!this.routesScrolling) {
-                        this.routesScrolling = true;
-                        document.querySelector('.hideme').style.display = 'none';
-                        setTimeout(() => this.startScrollingRoutes(), 1000);
-                    }
-                }
-            }, 100);
-        },
-        startScrollingRoutes() {
-            let startIndex = 0;
-            this.routeIntervalId = setInterval(() => {
-                if (startIndex + 4 <= this.allRoutes.length) {
-                    this.visibleRoutes = this.allRoutes.slice(startIndex, startIndex + 4);
-                    startIndex++;
-                } else {
-                    if (!this.fleetScrolling) {
-                        this.fleetScrolling = true;
-                        document.querySelector('.hideme1').style.display = 'none';
-                        setTimeout(() => this.startScrollingFleets(), 1000);
-                    }
-                }
-            }, 25);
-        },
-        startScrollingFleets() {
-            let startIndex = 0;
-            this.fleetIntervalId = setInterval(() => {
-                if (startIndex + 4 <= this.allFleets.length) {
-                    this.visibleFleets = this.allFleets.slice(startIndex, startIndex + 4);
-                    startIndex++;
-                } else {
-                    this.$router.push({ path: `/CompanySelect` });
-                }
-            }, 25);
-        },
+        }
     },
     beforeUnmount() {
         if (this.companyIntervalId) clearInterval(this.companyIntervalId);

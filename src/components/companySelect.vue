@@ -7,42 +7,30 @@
         <button class="buttonLogOut" @click="logOff">LOG OFF</button>
     </div>
     <div class="options">
-        <div v-for="company in companies" :key="company.id" class="option">
-            <button @click="selectCompany(company.operator_name, company.operator_code)">{{ company.operator_name }} | {{ company.operator_code }}</button>
+        <div v-for="company in sortedCompanies" :key="company.id" class="option">
+            <button @click="selectCompany(company.operator_name, company.operator_code)">
+                {{ company.operator_name }} | {{ company.operator_code }}
+            </button>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    computed: {
+        sortedCompanies() {
+            return [...this.companies].sort((a, b) => 
+                a.operator_name.localeCompare(b.operator_name)
+            );
+        }
+    },
     data() {
         return {
+            companies: [],  // Initialize companies array
             username: '', // Variable to store the username
-            companies: []  // Initialize companies array
         };
     },
-    mounted() {
-        const storedCompanies = localStorage.getItem('operators');
-        if (storedCompanies) {
-            this.companies = JSON.parse(storedCompanies); // Parse the stored data
-        } else {
-            console.error('No companies found in localStorage');
-            // Optionally set a default set of companies if none are found
-            this.companies = [
-                { id: 1, operator_name: 'No Data Found', operator_code: '' }
-            ];
-        }
-        // Get the username from localStorage if it exists
-        this.username = localStorage.getItem('username') || 'Guest'; // Default to 'Guest' if no username is found
-    },
     methods: {
-        selectCompany(companyName, companyCode) {
-            // Optionally, do something with the selected company (e.g., store it)
-            console.log(`Selected Company: ${companyName} | ${companyCode}`);
-            // Store the selected company in localStorage if needed
-            localStorage.setItem('selectedCompany', companyCode);
-            this.$router.push({ path: `/RouteSelect` });
-        },
         logOff() {
             // Clear localStorage (persists across sessions)
             localStorage.clear();
@@ -58,11 +46,32 @@ export default {
             // Redirect the user to a login page or home page (if needed)
             window.location.href = '/DriverLogin'; // Or replace with your desired route
         },
+        selectCompany(companyName, companyCode) {
+            // Optionally, do something with the selected company (e.g., store it)
+            console.log(`Selected Company: ${companyName} | ${companyCode}`);
+            // Store the selected company in localStorage if needed
+            localStorage.setItem('selectedCompany', companyCode);
+            this.$router.push({ path: `/VehicleSelect` });
+        },
         setUsername(newUsername) {
             // Set the new username in localStorage
             localStorage.setItem('username', newUsername);
             this.username = newUsername; // Update the username in the component
         }
+    },
+    mounted() {
+        const storedCompanies = localStorage.getItem('operators');
+        if (storedCompanies) {
+            this.companies = JSON.parse(storedCompanies); // Parse the stored data
+        } else {
+            console.error('No companies found in localStorage');
+            // Optionally set a default set of companies if none are found
+            this.companies = [
+                { id: 1, operator_name: 'No Data Found', operator_code: '' }
+            ];
+        }
+        // Get the username from localStorage if it exists
+        this.username = localStorage.getItem('username') || 'Guest'; // Default to 'Guest' if no username is found
     }
 };
 </script>

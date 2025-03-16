@@ -2,7 +2,7 @@ const { defineConfig } = require('@vue/cli-service');
 
 module.exports = {
   devServer: {
-    https: true,
+    https: false,
     allowedHosts: [
       'ticketer.mybustimes.cc', // Add your domain or IP here
       'dev-ticketer.mybustimes.cc', // Add your domain or IP here
