@@ -50,7 +50,7 @@
 
     <div class="time" id="wifiStatus">
       <h2>WIFI</h2>
-      <span>Load Time: {{ loadTime }} ms</span><br>
+      <span>{{ downloadSpeed }} mbps</span><br>
       <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn }}</small><br>
       <p>TAP WIFI TO DISMISS</p>
     </div>
@@ -217,20 +217,24 @@ export default {
         .then(blob => {
           const endTime = Date.now();
           const duration = (endTime - startTime) / 1000;  // Duration in seconds
-          const fileSizeInBytes = blob.size;
-          const fileSizeInKilobits = (fileSizeInBytes * 8) / 1000;  // Convert bytes to kilobits
-          const downloadSpeed = (fileSizeInKilobits / duration).toFixed(2);  // Speed in Kbps
-          
-          this.loadTime = duration;
-          
-          // Set Wi-Fi image based on download speed
-          console.log(downloadSpeed);
 
-          if (downloadSpeed > 2000) {
+          const fileSizeInBytes = blob.size;
+          const fileSizeInMegabits = (fileSizeInBytes * 8) / (1024 * 1024);  // Convert bytes to megabits
+
+          // Calculate download speed in Mbps (Megabits per second)
+          const downloadSpeed = (fileSizeInMegabits / duration).toFixed(2);  // Speed in Mbps
+
+          this.loadTime = duration;
+          this.downloadSpeed = downloadSpeed
+
+          // Log the download speed in Mbps
+          //console.log(`Download speed: ${downloadSpeed} Mbps`);
+
+          if (downloadSpeed > 2) {
             this.wifiImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png'; // Excellent
-          } else if (downloadSpeed > 1500) {
+          } else if (downloadSpeed > 1) {
             this.wifiImage = 'https://live.staticflickr.com/65535/54262661674_348b293572_o_d.png'; // Good
-          } else if (downloadSpeed > 1000) {
+          } else if (downloadSpeed > 0.5) {
             this.wifiImage = 'https://live.staticflickr.com/65535/54261533367_c04bc3c716_o_d.png'; // Fair
           } else {
             this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png'; // Poor
