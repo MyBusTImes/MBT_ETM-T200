@@ -230,11 +230,11 @@ export default {
           // Log the download speed in Mbps
           //console.log(`Download speed: ${downloadSpeed} Mbps`);
 
-          if (downloadSpeed > 2) {
+          if (downloadSpeed > 5) {
             this.wifiImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png'; // Excellent
-          } else if (downloadSpeed > 1) {
+          } else if (downloadSpeed > 3) {
             this.wifiImage = 'https://live.staticflickr.com/65535/54262661674_348b293572_o_d.png'; // Good
-          } else if (downloadSpeed > 0.5) {
+          } else if (downloadSpeed > 1) {
             this.wifiImage = 'https://live.staticflickr.com/65535/54261533367_c04bc3c716_o_d.png'; // Fair
           } else {
             this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png'; // Poor
