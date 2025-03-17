@@ -560,7 +560,6 @@ button {
     top: calc(25vh - 5px);
     height: 5vh;
     left: 10px;
-    max-height: 40px;
 }
 
 .swipe-container {
@@ -597,7 +596,7 @@ button {
     padding: 0 20px;
     width: calc(90% - 60px);
     margin-left: calc(5% + 5px);
-    height: 3vh;
+    height: 5vh;
 }
 
 .left {
@@ -613,7 +612,6 @@ button {
     height: 100%;
     width: 5%;
     position: absolute;
-
 }
 
 .ticketToIssue {
