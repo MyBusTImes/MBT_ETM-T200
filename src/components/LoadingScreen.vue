@@ -2,7 +2,7 @@
   <div>
     <img class="loading-img" alt="Vue logo" src="../assets/Ticketer Logo.png">
     <div class="loading-container">
-      <div class="loading-bar" :style="{ width: progress + '%' }"></div>
+      <div class="loading-bar"></div>
     </div>
     <!-- Add a conditional element to display after loading is done -->
     <div v-if="isLoadingComplete" class="loading-text">

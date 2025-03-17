@@ -92,8 +92,8 @@ export default {
     position: fixed;
     bottom: 10vh;
     width: 100%;
-    height: 20px;
-    background-color: #007bff;
+    height: 25px;
+    background-color: #004ab9;
     animation: loading 1s linear infinite;
     margin-bottom: 1rem;
 }
