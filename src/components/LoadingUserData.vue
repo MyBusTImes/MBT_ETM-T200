@@ -4,7 +4,6 @@
             <h1>TICKETER</h1>
             <p>Please wait a few moments...</p>
         </div>
-        <p v-if="loading" class="loading-text">Loading...</p>
     </div>
 </template>
 
