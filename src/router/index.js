@@ -6,10 +6,10 @@ import blank from "../components/blank.vue";
 let DriverLogin;
 
 try {
-  DriverLogin = () => import("../components/DriverLogin.vue");
+  DriverLogin = () => import('../components/DriverLogin.vue');
 } catch (e) {
-  console.warn("DriverLogin.vue is missing, falling back to a default component.");
-  DriverLogin = () => import("../components/blank.vue"); // Replace with a fallback component
+  console.warn("DriverLogin.vue is missing, falling back to DefaultComponent.");
+  DriverLogin = () => import('../components/blank.vue'); // Use a fallback component
 }
 
 import LoadUserData from "../components/LoadingUserData.vue";
