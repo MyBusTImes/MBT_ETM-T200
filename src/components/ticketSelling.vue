@@ -199,6 +199,9 @@ export default {
             const totalCap = this.paxSeated + this.paxStanding;
             return totalCap > 0 ? (this.paxTotal / totalCap) * 100 : 0;
         },
+        randomSignal() {
+            return this.$store.state.randomSignal;
+        },
     },
     methods: {
         alight(count) {
@@ -459,9 +462,16 @@ export default {
                     this.ticketName = t.ticket_name;
                     this.ticketPrice = t.ticket_price;
                     this.totalPax = t.count;
+                    
+                    let randomSignal = localStorage.getItem("randomSignal");
 
                     // Loop through the count of passengers to add multiple tickets
                     for (let i = 0; i < t.count; i++) {
+                        
+                        randomSignal = randomSignal - 1;
+
+                        localStorage.setItem("randomSignal", randomSignal);
+
                         // Prepare the ticket data to be added to the array
                         const currentDate = new Date();
                         const currentDateTime = currentDate.toISOString().split('.')[0];

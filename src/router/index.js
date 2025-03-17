@@ -20,6 +20,7 @@ import tripSummary from "../components/tripSummary.vue";
 import ticketReport from "../components/ticketReport.vue";
 import optionsMore from "../components/optionsMore.vue";
 import PreLogged from "../components/PreLogged.vue";
+import announcements from "../components/announcements.vue";
 
 const routes = [
   {
@@ -126,6 +127,11 @@ const routes = [
     path: '/PreLogged',
     name: 'PreLogged',
     component: PreLogged,
+  },
+  {
+    path: '/announcements',
+    name: 'announcements',
+    component: announcements,
   }
 ];
 

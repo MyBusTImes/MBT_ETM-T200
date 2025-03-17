@@ -11,30 +11,56 @@
         <p class="messagesNum">{{ messages }}</p>
         <img class="status-logo" src="@/assets/Mail.png" alt="">
       </div>
-      <div style="left: 22.5vw;" class="status-item">
+      <div style="left: 22.5vw;" class="status-item" @click="toggleVisibility('gpsStatus')">
         <img :src="gpsImage" alt="GPS Signal" id="gps">
         <img class="status-logo" src="@/assets/GPS.png" alt="">
       </div>
-      <div style="left: 32.5vw;" class="status-item">
+      <div style="left: 32.5vw;" class="status-item" @click="toggleVisibility('wifiStatus')">
         <img :src="wifiImage" alt="Wi-Fi Signal" id="Wi-Fi">
         <img src="@/assets/Globe.png" alt="">
       </div>
-      <div style="left: 42.5vw;" class="status-item">
+      <div style="left: 42.5vw;" class="status-item" @click="toggleVisibility('paperStatus')">
         <img :src="printerImage" alt="Printer Signal" id="Printer">
         <img class="status-logo" src="@/assets/Printer.png" alt="">
       </div>
-      <div style="left: 52.5vw;" class="status-item">
+      <div style="left: 52.5vw;" class="status-item" @click="toggleVisibility('trackingStatus')">
         <img src="https://live.staticflickr.com/65535/54265089689_a99f484562_o_d.png" alt="Tracking" id="Tracking">
         <img class="status-logo" src="@/assets/Tracking.png" alt="">
       </div>
     </div>
 
-    <div class="footerTime" @click="toggleVisibility">
+    <div class="footerTime" @click="toggleVisibility('time')">
       <span>{{ time }}</span><br>
       <span>{{ date }}</span>
     </div>
 
     <div class="time" id="time">
+      <h2>TIME</h2>
+      <span>{{ time }}{{ seconds }}</span><br>
+      <span>{{ date }}</span>
+      <p>TAP CLOCK TO DISMISS</p>
+    </div>
+
+    <div class="time" id="gpsStatus">
+      <h2>GPS</h2>
+        <span>{{ gpsStrength === 0 ? 'No GPS available' : gpsStrength }}</span><br>
+        <p>TAP GPS TO DISMISS</p>
+    </div>
+
+    <div class="time" id="wifiStatus">
+      <h2>WIFI</h2>
+      <span>Load Time: {{ loadTime }} ms</span><br>
+      <p>TAP WIFI TO DISMISS</p>
+    </div>
+
+    <div class="time" id="paperStatus">
+      <h2>TIME</h2>
+      <span>{{ this.randomSignal }} tickets left</span><br>
+      <button @click="resetPaper()" style="font-size: 75%;padding: 10px;margin-top: 30px;">Reload Paper</button>
+      <p>TAP CLOCK TO DISMISS</p>
+    </div>
+
+    <div class="time" id="trackingStatus">
       <h2>TIME</h2>
       <span>{{ time }}{{ seconds }}</span><br>
       <span>{{ date }}</span>
@@ -63,6 +89,19 @@ export default {
     this.randomPrinterSignal();
     this.updateTime(); // Start updating the time when the component is mounted
     setInterval(this.updateTime, 100); // Update the time every second
+    setInterval(this.fetchUpdates, 5000);
+    setInterval(() => {
+      this.randomSignal = localStorage.getItem("randomSignal");
+      if (this.randomSignal < 10) {
+        this.printerImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
+      } else if (this.randomSignal <= 0) {
+        this.printerImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
+      } else if (this.randomSignal < 40) {
+        this.printerImage = 'https://live.staticflickr.com/65535/54262843335_997362a3f3_o_d.png';
+      } else {
+        this.printerImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
+      }
+    }, 1000);
   },
   methods: {
     getImageSrc(messages) {
@@ -72,24 +111,46 @@ export default {
         return 'https://live.staticflickr.com/65535/54264885401_99629c9803_o_d.png';
       }
     },
-    toggleVisibility() {
-      const timeElement = document.getElementById('time');
-      // Check current display value
-      if (timeElement.style.display === "block") {
-        timeElement.style.display = "none";
-      } else {
-        timeElement.style.display = "block";
+    toggleVisibility(id) {
+      // List of elements to hide
+      const elementsToHide = ['gpsStatus', 'wifiStatus', 'paperStatus', 'trackingStatus', 'time'];
+
+      // Loop through and hide all elements, except the one with the passed id
+      elementsToHide.forEach(elementId => {
+        // Skip the element that matches the passed id
+        if (elementId !== id) {
+          const element = document.getElementById(elementId);
+          if (element) {
+            element.style.display = "none";
+          }
+        }
+      });
+
+      // Toggle the display of the passed element
+      const targetElement = document.getElementById(id);
+      if (targetElement) {
+        targetElement.style.display = (targetElement.style.display === "block") ? "none" : "block";
       }
     },
     randomPrinterSignal() {
       const randomSignal = Math.floor(Math.random() * 100);
+      this.randomSignal = randomSignal;
       if (randomSignal < 10) {
         this.printerImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
+      } else if (this.randomSignal <= 0) {
+        this.printerImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
       } else if (randomSignal < 40) {
         this.printerImage = 'https://live.staticflickr.com/65535/54262843335_997362a3f3_o_d.png';
       } else {
         this.printerImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
       }
+
+      localStorage.setItem("randomSignal", this.randomSignal);
+    },
+    resetPaper() {
+      this.printerImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
+      this.randomSignal = 100;
+      localStorage.setItem("randomSignal", this.randomSignal);
     },
     checkLocationPermission() {
       if ("geolocation" in navigator) {
@@ -129,6 +190,7 @@ export default {
       const navigationStart = performance.timing.navigationStart;
       const domComplete = performance.timing.domComplete;
       const loadTime = domComplete - navigationStart;
+      this.loadTime = loadTime
       if (loadTime < 1000) {
         this.wifiImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
       } else if (loadTime < 2000) {

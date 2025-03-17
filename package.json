@@ -16,7 +16,8 @@
     "vue": "^3.2.13",
     "vue-qrcode-reader": "^5.7.0",
     "vue-router": "^4.5.0",
-    "vue-web-cam": "^1.9.0"
+    "vue-web-cam": "^1.9.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
