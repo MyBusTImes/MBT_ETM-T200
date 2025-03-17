@@ -44,12 +44,14 @@
     <div class="time" id="gpsStatus">
       <h2>GPS</h2>
         <span>{{ gpsStrength === 0 ? 'No GPS available' : gpsStrength }}</span><br>
+        <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn }}</small><br>
         <p>TAP GPS TO DISMISS</p>
     </div>
 
     <div class="time" id="wifiStatus">
       <h2>WIFI</h2>
       <span>Load Time: {{ loadTime }} ms</span><br>
+      <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn }}</small><br>
       <p>TAP WIFI TO DISMISS</p>
     </div>
 
@@ -85,11 +87,11 @@ export default {
   },
   mounted() {
     this.checkLocationPermission();
+    this.resetUpdatedTime();
     this.getWiFiStrength();
     this.randomPrinterSignal();
     this.updateTime(); // Start updating the time when the component is mounted
     setInterval(this.updateTime, 100); // Update the time every second
-    setInterval(this.fetchUpdates, 5000);
     setInterval(() => {
       this.randomSignal = localStorage.getItem("randomSignal");
       if (this.randomSignal < 10) {
@@ -104,6 +106,25 @@ export default {
     }, 1000);
   },
   methods: {
+    resetUpdatedTime() {
+      // Clear any existing intervals
+      clearInterval(this.countdownInterval);
+      
+      // Set the countdown to 5 seconds
+      this.updatedIn = 5;
+      
+      // Start the countdown interval
+      this.countdownInterval = setInterval(() => {
+        if (this.updatedIn > 0) {
+          this.updatedIn -= 1;
+        } else {
+          this.checkLocationPermission();
+          this.getWiFiStrength();
+          // When the countdown reaches 0, reset it to 5 seconds
+          this.updatedIn = 5;
+        }
+      }, 1000);
+    },
     getImageSrc(messages) {
       if (messages === 0) {
         return 'https://live.staticflickr.com/65535/54262843340_7afe33a4e3_o_d.png';
@@ -187,19 +208,38 @@ export default {
       }
     },
     getWiFiStrength() {
-      const navigationStart = performance.timing.navigationStart;
-      const domComplete = performance.timing.domComplete;
-      const loadTime = domComplete - navigationStart;
-      this.loadTime = loadTime
-      if (loadTime < 1000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';
-      } else if (loadTime < 2000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54262661674_348b293572_o_d.png';
-      } else if (loadTime < 5000) {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54261533367_c04bc3c716_o_d.png';
-      } else {
-        this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png';
-      }
+      const imageUrl = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';  // A file to test download speed
+      
+      const startTime = Date.now();
+      
+      fetch(imageUrl)
+        .then(response => response.blob())
+        .then(blob => {
+          const endTime = Date.now();
+          const duration = (endTime - startTime) / 1000;  // Duration in seconds
+          const fileSizeInBytes = blob.size;
+          const fileSizeInKilobits = (fileSizeInBytes * 8) / 1000;  // Convert bytes to kilobits
+          const downloadSpeed = (fileSizeInKilobits / duration).toFixed(2);  // Speed in Kbps
+          
+          this.loadTime = duration;
+          
+          // Set Wi-Fi image based on download speed
+          console.log(downloadSpeed);
+
+          if (downloadSpeed > 2000) {
+            this.wifiImage = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png'; // Excellent
+          } else if (downloadSpeed > 1500) {
+            this.wifiImage = 'https://live.staticflickr.com/65535/54262661674_348b293572_o_d.png'; // Good
+          } else if (downloadSpeed > 1000) {
+            this.wifiImage = 'https://live.staticflickr.com/65535/54261533367_c04bc3c716_o_d.png'; // Fair
+          } else {
+            this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png'; // Poor
+          }
+        })
+        .catch(error => {
+          console.error('Speed test failed:', error);
+          this.wifiImage = 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png'; // Default error image
+        });
     },
     updateTime() {
       const now = new Date();
@@ -269,7 +309,7 @@ export default {
   font-size: 7.5vw;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-top: 50px solid rgb(80, 80, 80);
-  border-bottom: 25px solid rgb(80, 80, 80);
+  border-bottom: 35px solid rgb(80, 80, 80);
 }
 
 .time h2 {
