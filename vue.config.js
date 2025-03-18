@@ -23,5 +23,8 @@ module.exports = defineConfig({
       'localhost',
       '192.168.1.150',
     ],
+    client: {
+      overlay: false, // Disable the error overlay in the browser
+    },
   },
 });
