@@ -28,6 +28,7 @@ import ticketReport from "../components/ticketReport.vue";
 import optionsMore from "../components/optionsMore.vue";
 import PreLogged from "../components/PreLogged.vue";
 import announcements from "../components/announcements.vue";
+import scanTicket from "../components/scanTicket.vue";
 
 const routes = [
   {
@@ -139,6 +140,11 @@ const routes = [
     path: '/announcements',
     name: 'announcements',
     component: announcements,
+  },
+  {
+    path: '/scanTicket',
+    name: 'scanTicket',
+    component: scanTicket,
   }
 ];
 

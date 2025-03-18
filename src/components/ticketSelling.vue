@@ -270,6 +270,8 @@ export default {
                 StopElement.textContent = this.StopArray[this.currentIndexStop];
                 const updatedData = updateCurrentStop(this.tripId, this.StopArray[this.currentIndexStop]);
                 console.log(updatedData);
+
+                this.play('this is, ' + this.StopArray[this.currentIndexStop] + '. Next stop, ' + this.StopArray[this.currentIndexStop + 1])
             }
         },
 
@@ -296,6 +298,43 @@ export default {
                 this.currentIndexStop = (this.currentIndexStop + 1) % this.StopArray.length;
                 localStorage.setItem('currentIndexStop', (this.currentIndexStop + 1) % this.StopArray.length);
                 this.updateStopTag();
+            }
+        },
+        play(text) {
+            const isTTSMuted = localStorage.getItem('muteTTS') === 'true';
+            if (!isTTSMuted) {
+                if ('speechSynthesis' in window) {
+                    // Replace "opp" with "opposite" before speaking
+                    text = text.replace(/\bM - \b/gi, "");
+                    text = text.replace(/\badj\b/gi, "adjacent to, ");
+                    text = text.replace(/\bPH\b/gi, "pub, ");
+                    text = text.replace(/\bopp\b/gi, "opposite, ");
+
+                    const utterance = new SpeechSynthesisUtterance(text);
+
+                    // Set default language and voice
+                    utterance.lang = 'en-GB'; // English (UK)
+
+                    // Check for voices and set a natural-sounding one
+                    const voices = speechSynthesis.getVoices();
+                    const selectedVoice = voices.find(voice =>
+                        voice.name.includes('Google UK English Male') ||
+                        voice.name.includes('Google UK English Female')
+                    );
+
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice; // Use a more natural voice if available
+                    }
+
+                    // Customize rate, pitch, and volume for a more natural sound
+                    utterance.rate = 1; // Speed of speech (1 is normal)
+                    utterance.pitch = 1; // Normal pitch
+                    utterance.volume = 1; // Set volume dynamically
+
+                    speechSynthesis.speak(utterance);
+                } else {
+                    alert('Your browser does not support text-to-speech.');
+                }
             }
         },
         prevStop() {
@@ -465,12 +504,12 @@ export default {
                     this.ticketName = t.ticket_name;
                     this.ticketPrice = t.ticket_price;
                     this.totalPax = t.count;
-                    
+
                     let randomSignal = localStorage.getItem("randomSignal");
 
                     // Loop through the count of passengers to add multiple tickets
                     for (let i = 0; i < t.count; i++) {
-                        
+
                         randomSignal = randomSignal - 1;
 
                         localStorage.setItem("randomSignal", randomSignal);
@@ -538,7 +577,10 @@ export default {
 </script>
 
 <style>
-html, body, template, #app {
+html,
+body,
+template,
+#app {
     touch-action: manipulation;
 }
 

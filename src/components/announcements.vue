@@ -22,7 +22,7 @@
                 @click="play('We are waiting here for a few minutes due to arriving ahead of our scheduled time.')">Waiting</button>
         </div>
         <div class="full">
-            <button @click="play('If possible, please make use of the available upstairs seating.')">Site
+            <button @click="play('If possible, please make use of the available upstairs seating.')">Seat
                 Upstairs</button>
         </div>
         <div class="full">

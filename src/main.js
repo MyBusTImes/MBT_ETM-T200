@@ -17,14 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
     clickAudio.pause();
     clickAudio.currentTime = 0; // Reset to the beginning
   }).catch(() => {
-    // Autoplay policies may block this; it's fine as long as the audio loads
     console.log('Audio preloading skipped due to autoplay restrictions.');
   });
 });
 
-// Add a global click listener for buttons
 document.addEventListener('click', (event) => {
-  if (event.target.tagName === 'BUTTON') {
+  // Always check the latest localStorage value when a button is clicked
+  const isSFXMuted = localStorage.getItem('muteSFX') === 'true';
+
+  if (event.target.tagName === 'BUTTON' && !isSFXMuted) {
     clickAudio.currentTime = 0; // Reset to the beginning for instant playback
     clickAudio.play().catch((error) => {
       console.error('Audio playback failed:', error);

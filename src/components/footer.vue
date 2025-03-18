@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="logo">
-      <img height="100%" width="100%" src="@/assets/logo.png" alt="">
+      <img height="100%" width="100%" src="@/assets/logo.png" alt="" @click="toggleVisibility('options')">
     </div>
 
     <div class="status">
@@ -32,6 +32,11 @@
     <div class="footerTime" @click="toggleVisibility('time')">
       <span>{{ time }}</span><br>
       <span>{{ date }}</span>
+    </div>
+
+    <div class="userOptions" id="options">
+      <button @click="toggleSFX">{{ sfxText }}</button><br>
+      <button @click="toggleTTS">{{ ttsText }}</button>
     </div>
 
     <div class="time" id="time">
@@ -76,7 +81,17 @@ export default {
       seconds: '',
       date: '', // Live date
       messages: 0,
+      muteSFX: localStorage.getItem("muteSFX") === "true",
+      muteTTS: localStorage.getItem("muteTTS") === "true",
     };
+  },
+  computed: {
+    sfxText() {
+      return this.muteSFX ? "Unmute SFX" : "Mute SFX";
+    },
+    ttsText() {
+      return this.muteTTS ? "Unmute TTS" : "Mute TTS";
+    },
   },
   mounted() {
     this.checkLocationPermission();
@@ -99,6 +114,14 @@ export default {
     }, 1000);
   },
   methods: {
+    toggleSFX() {
+      this.muteSFX = !this.muteSFX;
+      localStorage.setItem("muteSFX", this.muteSFX);
+    },
+    toggleTTS() {
+      this.muteTTS = !this.muteTTS;
+      localStorage.setItem("muteTTS", this.muteTTS);
+    },
     resetUpdatedTime() {
       // Clear any existing intervals
       clearInterval(this.countdownInterval);
@@ -255,6 +278,22 @@ export default {
 </script>
 
 <style scoped>
+.userOptions {
+  display: none;
+  background: black;
+  width: 25vw;
+  position: fixed;
+  bottom: 10vh;
+  left: 0;
+  padding: 10px;
+}
+
+.userOptions button {
+  padding: 20px;
+  width: 100%;
+  font-size: 125%;
+}
+
 .status {
   display: flex;
   width: 50vw;
