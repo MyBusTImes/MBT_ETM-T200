@@ -50,7 +50,7 @@ export default {
             console.log(`Selected Company: ${companyName} | ${companyCode}`);
             // Store the selected company in localStorage if needed
             localStorage.setItem('selectedCompany', companyCode);
-            this.$router.push({ path: `/RouteSelect` });
+            this.$router.push({ path: `/vehicleSelect` });
         },
         logOff() {
             // Clear localStorage (persists across sessions)
