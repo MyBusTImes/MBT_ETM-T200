@@ -56,16 +56,9 @@
     </div>
 
     <div class="time" id="paperStatus">
-      <h2>TIME</h2>
+      <h2>PAPER</h2>
       <span>{{ this.randomSignal }} tickets left</span><br>
-      <button @click="resetPaper()" style="font-size: 75%;padding: 10px;margin-top: 30px;">Reload Paper</button>
-      <p>TAP CLOCK TO DISMISS</p>
-    </div>
-
-    <div class="time" id="trackingStatus">
-      <h2>TIME</h2>
-      <span>{{ time }}{{ seconds }}</span><br>
-      <span>{{ date }}</span>
+      <button @click="resetPaper()" style="font-size: 2vw; padding: 1vh; margin-top: 30px;">Reload Paper</button>
       <p>TAP CLOCK TO DISMISS</p>
     </div>
   </div>

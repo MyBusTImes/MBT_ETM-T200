@@ -1,14 +1,27 @@
 const { defineConfig } = require('@vue/cli-service');
 
-module.exports = {
+module.exports = defineConfig({
+  chainWebpack: (config) => {
+    // Ensure the HTML plugin is available and modify it correctly
+    config.plugin('html').tap((args) => {
+      // If 'scripts' doesn't exist, initialize it as an array
+      if (!args[0].scripts) {
+        args[0].scripts = [];
+      }
+      
+      // Add the Font Awesome script to the 'scripts' array
+      args[0].scripts.push('https://kit.fontawesome.com/7e32e49cf3.js');
+      
+      return args;
+    });
+  },
   devServer: {
     https: false,
     allowedHosts: [
-      'ticketer.mybustimes.cc', // Add your domain or IP here
-      'dev-ticketer.mybustimes.cc', // Add your domain or IP here
+      'ticketer.mybustimes.cc', 
+      'dev-ticketer.mybustimes.cc',
       'localhost',
-      '192.168.1.150' // Include localhost if needed
+      '192.168.1.150',
     ],
-    // Other devServer options (e.g., host, port, etc.)
   },
-};
+});

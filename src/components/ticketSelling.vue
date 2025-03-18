@@ -177,12 +177,14 @@ export default {
             this.StopArray = routeStop1Array;
             this.Start = this.routeArray[0];
             this.End = this.routeArray[this.routeArray.length - 1];
+            localStorage.setItem("dest", this.End);
             console.log('Inbound', this.Start, this.End);
             localStorage.setItem('stopArray', JSON.stringify(this.StopArray));
         } else {
             this.StopArray = routeStop2Array;
             this.Start = this.routeArray[this.routeArray.length - 1];
             this.End = this.routeArray[0];
+            localStorage.setItem("dest", this.End);
             console.log('Outbound', this.Start, this.End);
             localStorage.setItem('stopArray', JSON.stringify(this.StopArray));
         }
@@ -275,6 +277,7 @@ export default {
             const toElement = document.getElementById('To');
             if (toElement && this.routeArray.length > 0) {
                 toElement.textContent = this.routeArray[this.currentIndexTo];
+                localStorage.setItem("dest", this.routeArray[this.currentIndexTo]);
             }
         },
 
