@@ -55,7 +55,11 @@ export default {
         arriveAtStop() {
             // Handle the arrival at stop logic here
             const audio = new Audio(require('@/assets/Audio/Click.wav'));
-            audio.play();
+
+            const isSFXMuted = localStorage.getItem('muteSFX') === 'true';
+            if (!isSFXMuted) {
+                audio.play();
+            }
             console.log("Arriving at stop:", this.nextStop);
             updateCurrentStop(this.TripID, this.stopArray[this.currentIndexStop]);
             this.currentIndexStop = this.currentIndexStop + 1;
@@ -67,6 +71,45 @@ export default {
             }
             if (this.lastStop && this.lastStop.startsWith("M - ")) {
                 this.lastStop = this.lastStop.split("M - ")[1]; // Remove "M - " from last stop
+            }
+
+            this.play('this is, ' + this.lastStop + '. Next stop, ' + this.nextStop)
+        },
+        play(text) {
+            const isTTSMuted = localStorage.getItem('muteTTS') === 'true';
+            if (!isTTSMuted) {
+                if ('speechSynthesis' in window) {
+                    // Replace "opp" with "opposite" before speaking
+                    text = text.replace(/\bM - \b/gi, "");
+                    text = text.replace(/\badj\b/gi, "adjacent to, ");
+                    text = text.replace(/\bPH\b/gi, "pub, ");
+                    text = text.replace(/\bopp\b/gi, "opposite, ");
+
+                    const utterance = new SpeechSynthesisUtterance(text);
+
+                    // Set default language and voice
+                    utterance.lang = 'en-GB'; // English (UK)
+
+                    // Check for voices and set a natural-sounding one
+                    const voices = speechSynthesis.getVoices();
+                    const selectedVoice = voices.find(voice =>
+                        voice.name.includes('Google UK English Male') ||
+                        voice.name.includes('Google UK English Female')
+                    );
+
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice; // Use a more natural voice if available
+                    }
+
+                    // Customize rate, pitch, and volume for a more natural sound
+                    utterance.rate = 1; // Speed of speech (1 is normal)
+                    utterance.pitch = 1; // Normal pitch
+                    utterance.volume = 1; // Set volume dynamically
+
+                    speechSynthesis.speak(utterance);
+                } else {
+                    alert('Your browser does not support text-to-speech.');
+                }
             }
         },
         goToTicketSelling() {

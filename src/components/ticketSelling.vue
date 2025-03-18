@@ -336,7 +336,7 @@ export default {
                     alert('Your browser does not support text-to-speech.');
                 }
             }
-        },
+        }, 
         prevStop() {
             if (this.StopArray.length > 0) {
                 this.currentIndexStop =
