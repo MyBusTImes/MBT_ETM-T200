@@ -32,7 +32,7 @@ export default {
         if (this.progress >= 100) {
           this.progress = 100; // Cap at 100%
           clearInterval(timer); // Stop the timer
-          this.$router.push('/blank?target=loading-data&time=5000'); // Navigate to LoadingData.vue
+          this.$router.push('/blank?target=LoadingData&time=5000'); // Navigate to LoadingData.vue
         }
       }, interval);
     },

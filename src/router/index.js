@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoadingScreen from '../components/LoadingScreen.vue';
 import LoadingData from '../components/LoadingData.vue';
 import blank from "../components/blank.vue";
-
 let DriverLogin;
 
 try {
@@ -11,7 +10,6 @@ try {
   console.warn("DriverLogin.vue is missing, falling back to DefaultComponent.");
   DriverLogin = () => import('../components/blank.vue'); // Use a fallback component
 }
-
 import LoadUserData from "../components/LoadingUserData.vue";
 import CompanySelect from "../components/companySelect.vue";
 import VehicleSelect from "../components/VehicleSelect.vue";

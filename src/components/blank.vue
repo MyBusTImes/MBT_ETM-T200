@@ -24,16 +24,7 @@
     },
     methods: {
       redirect() {
-          // Ensure target is defined and is a valid route
-          if (this.target) {
-            // If using named routes, you could use the route's name for better maintainability
-            this.$router.push({ name: this.target }); // Assuming target is a route name, like 'loading-data'
-            
-            // Alternatively, if you still want to use the path:
-            // this.$router.push({ path: `/${this.target}` }); // Assuming target is a valid path
-          } else {
-            console.error('No target route specified!');
-          }
+          this.$router.push({ name: this.target }); // Assuming target is a route name, like 'loading-data'
         }
     }
   };
