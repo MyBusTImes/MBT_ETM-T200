@@ -139,7 +139,7 @@ export default {
         const toggleBELL = localStorage.getItem("toggleBELL") === "true"; // Convert to boolean
 
         if (toggleBELL && this.bellOn != true) {
-          const randomChance = Math.floor(Math.random() * 1) + 1; // 1 in 5 chance
+          const randomChance = Math.floor(Math.random() * 5) + 1; // 1 in 5 chance
           console.log(randomChance);
           if (randomChance === 1) {
             const audio = new Audio(new URL("@/assets/Audio/bell.wav", import.meta.url));
