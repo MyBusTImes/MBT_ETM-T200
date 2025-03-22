@@ -1,6 +1,36 @@
 const { defineConfig } = require('@vue/cli-service');
 
 module.exports = defineConfig({
+  pwa: {
+    name: 'MyTicketer',
+    themeColor: '#FFFFFF',
+    msTileColor: '#FFFFFF',
+    manifestOptions: {
+      background_color: '#FFFFFF',
+    },
+    workboxOptions: {
+      cacheName: 'my-ticket-v2.0.31',
+      // You can define custom cache names here
+      skipWaiting: true, // Skip waiting to activate the new service worker immediately
+      clientsClaim: true, // Ensure the service worker controls all clients as soon as possible
+      runtimeCaching: [
+        {
+          urlPattern: /\.css$/,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'styles-cache',
+          },
+        },
+        {
+          urlPattern: /\.(?:js|json)$/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'scripts-cache',
+          },
+        },
+      ],
+    },
+  },
   chainWebpack: (config) => {
     // Ensure the HTML plugin is available and modify it correctly
     config.plugin('html').tap((args) => {
