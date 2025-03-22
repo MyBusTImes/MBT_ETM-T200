@@ -40,7 +40,7 @@
         style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 50vw; height: 20vh; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
         <label for="startTime">Start Time</label><br>
         <input type="time" id="startTime" v-model="startTime" data-tempmail="17613"
-            style="border: 0;width: 100%;text-align: center;height: 7.5vh;font-size: 2vh;">
+            style="border: 0;width: 100%;text-align: center;height: 7.5vh;font-size: 2vh;"><br>
         <button style="border-right: 5px solid white;" class="button3 inOutBT">SET</button><button
             style="border-left: 5px solid white;" class="button3 inOutBT" @click="dontLog()">DON'T LOG</button>
     </div>
@@ -301,11 +301,13 @@ export default {
                     localStorage.setItem('INBOUND', true);
                     const popup2 = document.querySelector('.popup2');
                     popup2.style.display = 'block';
+                    this.selectedEndDestination = this.stop2Array;
                     button4.addEventListener('click', handleButton4Click);
                 } else if (button.classList.contains('button2')) {
                     localStorage.setItem('INBOUND', false);
                     const popup2 = document.querySelector('.popup2');
                     popup2.style.display = 'block';
+                    this.selectedEndDestination = this.stopArray;
                     button4.addEventListener('click', handleButton4Click);
                 }
 

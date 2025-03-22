@@ -4,6 +4,14 @@ import ticketDeclined from '@/assets/Audio/Ticket decline.wav';
 
 const playSFX = (path) => {
   const audio = new Audio(path);
+  
+  // Check if the played sound is ticketAccepted
+  if (path === ticketAccepted) {
+    let pax = parseInt(localStorage.getItem("paxTotal")) || 0;
+    pax += 1;
+    localStorage.setItem("paxTotal", pax);
+  }
+
   audio.play();
 };
 </script>
@@ -18,7 +26,7 @@ const playSFX = (path) => {
         </div>
     </div>
     <div class="buttons">
-        <button class="optionBT" @click="gotTo('optionsMenu')">BACK</button>
+        <button class="optionBT" @click="gotTo('ticketSelling')">BACK</button>
     </div>
 </template>
 

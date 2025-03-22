@@ -29,10 +29,13 @@
       </div>
     </div>
 
-    <div class="fullScreen" @click="clearBell()">
+    <div class="fullScreenStop" @click="clearBell()">
       <div class="stopBanner">
         <h2>STOP</h2>
         <p>Tap To Dismiss</p>
+        <div class="stopInfo">
+          <p>{{ stopText }}</p>
+        </div>
       </div>
     </div>
 
@@ -58,7 +61,7 @@
       <h2>GPS</h2>
       <span>{{ gpsStrength === 0 ? 'No GPS available' : gpsStrength }}</span><br>
       <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
-      }}</small><br>
+        }}</small><br>
       <p>TAP GPS TO DISMISS</p>
     </div>
 
@@ -66,7 +69,7 @@
       <h2>WIFI</h2>
       <span>{{ downloadSpeed }} mbps</span><br>
       <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
-      }}</small><br>
+        }}</small><br>
       <p>TAP WIFI TO DISMISS</p>
     </div>
 
@@ -94,6 +97,9 @@ export default {
       muteSFX: localStorage.getItem("muteSFX") === "true",
       muteTTS: localStorage.getItem("muteTTS") === "true",
       toggleBELL: localStorage.getItem("toggleBELL") === "true",
+      bellLock: false,
+      bellOn: false,
+      paxAlight: 0,
     };
   },
   computed: {
@@ -108,7 +114,7 @@ export default {
     },
   },
   mounted() {
-    this.interval = setInterval(this.checkBell, 5000);
+    this.interval = setInterval(this.checkBell, 3000);
     this.checkLocationPermission();
     this.resetUpdatedTime();
     this.getWiFiStrength();
@@ -130,33 +136,59 @@ export default {
   },
   methods: {
     checkBell() {
+      if (this.bellLock) return; // Prevent triggering during lockout
+
       const imgSrc = document.getElementById("Tracking")?.src;
+      this.paxTotal = parseInt(localStorage.getItem("paxTotal") || 0);
 
-
-
-      if (imgSrc !== 'https://live.staticflickr.com/65535/54265089689_a99f484562_o_d.png') {
-        console.log(imgSrc);
+      if (imgSrc === 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png') {
         const toggleBELL = localStorage.getItem("toggleBELL") === "true"; // Convert to boolean
 
-        if (toggleBELL && this.bellOn != true) {
-          const randomChance = Math.floor(Math.random() * 5) + 1; // 1 in 5 chance
-          console.log(randomChance);
-          if (randomChance === 1) {
+        if (toggleBELL && !this.bellOn) {
+          const randomChance = Math.floor(Math.random() * 10) + 1; // 1 in 10 chance
+          if (randomChance === 1 && this.paxTotal > 0) {
+            const paxBoarding = Math.floor(Math.random() * 5); // Amount of passengers boarding
+            // Ensure paxAlight is between 0 and 5, but only 0 if paxBoarding > 1
+            const minAlight = paxBoarding > 1 ? 0 : 1; 
+            const paxAlight = Math.max(minAlight, Math.min(5, Math.floor(Math.random() * this.paxTotal) + 1));
+
+            this.stopText = 'Alighting: ' + paxAlight + '\n Boarding: ' + paxBoarding;
+
             const audio = new Audio(new URL("@/assets/Audio/bell.wav", import.meta.url));
-            audio.play();
-            const banner = document.querySelector(".fullScreen");
+            const isSFXMuted = localStorage.getItem('muteSFX') === 'true';
+            if (!isSFXMuted || paxAlight === 0) {
+              audio.play();
+            }
+            const banner = document.querySelector(".fullScreenStop");
             banner.style.display = "block"; // Show banner
             this.bellOn = true;
+            this.bellLock = true;
+          } else if  (randomChance === 1) {
+            const paxBoarding = Math.floor(Math.random() * 5); // Amount of passengers boarding
+          
+            this.stopText = 'Boarding: ' + paxBoarding;
+
+            const banner = document.querySelector(".fullScreenStop");
+            banner.style.display = "block"; // Show banner
+            this.bellOn = true;
+            this.bellLock = true;
           }
         }
       }
     },
 
     clearBell() {
-      const banner = document.querySelector(".fullScreen");
+      const banner = document.querySelector(".fullScreenStop");
       banner.style.display = "none";
       this.bellOn = false;
+      this.bellLock = true; // Activate lockout
+
+      // Set a 10-second timeout before allowing bell to trigger again
+      setTimeout(() => {
+        this.bellLock = false;
+      }, 10000);
     },
+
     toggleBELL_func() {
       this.toggleBELL = !this.toggleBELL;
       localStorage.setItem("toggleBELL", this.toggleBELL);
@@ -338,9 +370,24 @@ export default {
   color: white;
 }
 
+.stopInfo {
+  width: 25vw;
+  height: 10vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  text-align: center;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+}
 .stopBanner p {
-  margin: 0;
+  margin: auto;
   font-size: 2vh;
+}
+
+.stopInfo p {
+  font-size: 4vw;
 }
 
 .stopBanner h2 {
@@ -349,13 +396,13 @@ export default {
   margin-top: 1vh;
 }
 
-.fullScreen {
+.fullScreenStop {
   display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 10vh;
   z-index: 1000;
 }
 

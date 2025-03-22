@@ -39,7 +39,7 @@
         </div>
         <div class="full">
             <button
-                @click="play('See it, Say it, Sorted.')">See it | Say it | Sorted</button>
+                @click="play('If you see something that doesnt look right, tell a member of staff, or text the british transport police on, six 1 o 1 six, See it, Say it, Sorted.')">See it | Say it | Sorted</button>
         </div>
         <div class="full">
             <div v-for="(announcement, index) in savedAnnouncements" :key="index"
@@ -61,7 +61,7 @@
         </div>
     </div>
     <div class="buttons">
-        <button class="optionBT" @click="gotTo('optionsMore')">BACK</button>
+        <button class="optionBT" @click="gotTo('ticketSelling')">BACK</button>
         <button class="startBT" style="right: 12.5vw;" @click="adjustVolume('Down')">▼</button>
         <button class="startBT" @click="adjustVolume('Up')">▲</button>
     </div>

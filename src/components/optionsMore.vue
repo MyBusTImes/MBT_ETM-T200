@@ -6,9 +6,6 @@
         <div class="full">
             <button @click="gotTo('LoadUserData')">RELOAD ALL DATA</button>
         </div>
-        <div class="full">
-            <button @click="gotTo('announcements')">Announcements</button>
-        </div>
     </div>
     <div class="buttons">
         <button class="optionBT" @click="gotTo('optionsMenu')">BACK</button>

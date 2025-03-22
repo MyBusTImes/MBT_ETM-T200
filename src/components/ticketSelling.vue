@@ -78,6 +78,7 @@
 </template>
 <script>
 import { updateCurrentStop } from '@/update_currect_stop.js';
+import ticketAccepted from '@/assets/Audio/Ticket accepted.wav';
 
 export default {
     data() {
@@ -495,6 +496,12 @@ export default {
             }
         },
         issueTicket() {
+            const audio = new Audio(ticketAccepted);
+            const isSFXMuted = localStorage.getItem('muteSFX') === 'true';
+            if (!isSFXMuted) {
+              audio.play();
+            }
+
             // Ensure the array to store ticket data exists
             if (!this.ticketDataArray) {
                 this.ticketDataArray = [];

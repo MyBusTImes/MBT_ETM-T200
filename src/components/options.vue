@@ -19,9 +19,8 @@
             <button @click="gotTo('passengerOccupany')">PASSENGER<br>OCCUPANCY</button>
         </div>
         <div class="full">
-            
+            <button @click="gotTo('announcements')">Announcements</button>
         </div>
-
     </div>
     <div class="buttons">
         <button class="optionBT" @click="gotTo('ticketSelling')">BACK</button>
