@@ -138,8 +138,6 @@ export default {
         console.log(imgSrc);
         const toggleBELL = localStorage.getItem("toggleBELL") === "true"; // Convert to boolean
 
-        console.log(toggleBELL);
-
         if (toggleBELL && this.bellOn != true) {
           const randomChance = Math.floor(Math.random() * 1) + 1; // 1 in 5 chance
           console.log(randomChance);
