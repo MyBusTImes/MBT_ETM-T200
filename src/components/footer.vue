@@ -29,12 +29,20 @@
       </div>
     </div>
 
+    <div class="fullScreen" @click="clearBell()">
+      <div class="stopBanner">
+        <h2>STOP</h2>
+        <p>Tap To Dismiss</p>
+      </div>
+    </div>
+
     <div class="footerTime" @click="toggleVisibility('time')">
       <span>{{ time }}</span><br>
       <span>{{ date }}</span>
     </div>
 
     <div class="userOptions" id="options">
+      <button @click="toggleBELL_func">{{ bellText }}</button><br>
       <button @click="toggleSFX">{{ sfxText }}</button><br>
       <button @click="toggleTTS">{{ ttsText }}</button>
     </div>
@@ -48,15 +56,17 @@
 
     <div class="time" id="gpsStatus">
       <h2>GPS</h2>
-        <span>{{ gpsStrength === 0 ? 'No GPS available' : gpsStrength }}</span><br>
-        <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn }}</small><br>
-        <p>TAP GPS TO DISMISS</p>
+      <span>{{ gpsStrength === 0 ? 'No GPS available' : gpsStrength }}</span><br>
+      <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
+      }}</small><br>
+      <p>TAP GPS TO DISMISS</p>
     </div>
 
     <div class="time" id="wifiStatus">
       <h2>WIFI</h2>
       <span>{{ downloadSpeed }} mbps</span><br>
-      <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn }}</small><br>
+      <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
+      }}</small><br>
       <p>TAP WIFI TO DISMISS</p>
     </div>
 
@@ -83,6 +93,7 @@ export default {
       messages: 0,
       muteSFX: localStorage.getItem("muteSFX") === "true",
       muteTTS: localStorage.getItem("muteTTS") === "true",
+      toggleBELL: localStorage.getItem("toggleBELL") === "true",
     };
   },
   computed: {
@@ -92,8 +103,12 @@ export default {
     ttsText() {
       return this.muteTTS ? "Unmute TTS" : "Mute TTS";
     },
+    bellText() {
+      return this.toggleBELL ? "Disable Bell" : "Enable Bell";
+    },
   },
   mounted() {
+    this.interval = setInterval(this.checkBell, 5000);
     this.checkLocationPermission();
     this.resetUpdatedTime();
     this.getWiFiStrength();
@@ -114,21 +129,55 @@ export default {
     }, 1000);
   },
   methods: {
-    toggleSFX() {
-      this.muteSFX = !this.muteSFX;
-      localStorage.setItem("muteSFX", this.muteSFX);
+    checkBell() {
+      const imgSrc = document.getElementById("Tracking")?.src;
+
+
+
+      if (imgSrc !== 'https://live.staticflickr.com/65535/54265089689_a99f484562_o_d.png') {
+        console.log(imgSrc);
+        const toggleBELL = localStorage.getItem("toggleBELL") === "true"; // Convert to boolean
+
+        console.log(toggleBELL);
+
+        if (toggleBELL && this.bellOn != true) {
+          const randomChance = Math.floor(Math.random() * 1) + 1; // 1 in 5 chance
+          console.log(randomChance);
+          if (randomChance === 1) {
+            const audio = new Audio(new URL("@/assets/Audio/bell.wav", import.meta.url));
+            audio.play();
+            const banner = document.querySelector(".fullScreen");
+            banner.style.display = "block"; // Show banner
+            this.bellOn = true;
+          }
+        }
+      }
+    },
+
+    clearBell() {
+      const banner = document.querySelector(".fullScreen");
+      banner.style.display = "none";
+      this.bellOn = false;
+    },
+    toggleBELL_func() {
+      this.toggleBELL = !this.toggleBELL;
+      localStorage.setItem("toggleBELL", this.toggleBELL);
     },
     toggleTTS() {
       this.muteTTS = !this.muteTTS;
       localStorage.setItem("muteTTS", this.muteTTS);
     },
+    toggleSFX() {
+      this.muteSFX = !this.muteSFX;
+      localStorage.setItem("muteSFX", this.muteSFX);
+    },
     resetUpdatedTime() {
       // Clear any existing intervals
       clearInterval(this.countdownInterval);
-      
+
       // Set the countdown to 5 seconds
       this.updatedIn = 5;
-      
+
       // Start the countdown interval
       this.countdownInterval = setInterval(() => {
         if (this.updatedIn > 0) {
@@ -225,9 +274,9 @@ export default {
     },
     getWiFiStrength() {
       const imageUrl = 'https://live.staticflickr.com/65535/54264871386_d81d4d41d3_o_d.png';  // A file to test download speed
-      
+
       const startTime = Date.now();
-      
+
       fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {
@@ -273,11 +322,45 @@ export default {
       this.time = `${hours}:${minutes}`;
       this.date = `${month} ${day}`;
     }
+  },
+  beforeUnmount() {
+    clearInterval(this.interval);
   }
 };
 </script>
 
 <style scoped>
+.stopBanner {
+  background-color: #ca1a1a;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 10vh;
+  color: white;
+}
+
+.stopBanner p {
+  margin: 0;
+  font-size: 2vh;
+}
+
+.stopBanner h2 {
+  font-size: 5vh;
+  margin: 0;
+  margin-top: 1vh;
+}
+
+.fullScreen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+}
+
 .userOptions {
   display: none;
   background: black;
@@ -303,12 +386,14 @@ export default {
   right: 25vw;
   height: 10vh;
 }
+
 .status-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   position: fixed;
-  width: 8vh; /* Adjusted width for all items to fit 5 icons */
+  width: 8vh;
+  /* Adjusted width for all items to fit 5 icons */
   height: 10vh;
   bottom: -2vh;
 }
@@ -317,7 +402,8 @@ export default {
   position: relative;
   bottom: 5px;
   max-width: 45%;
-  width: 100%; /* Adjust the width of the images */
+  width: 100%;
+  /* Adjust the width of the images */
   object-fit: contain;
 }
 
@@ -386,6 +472,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0 10px;
+  z-index: 1000;
 }
 
 .footerTime {
@@ -409,7 +496,7 @@ export default {
   .time {
     border-top: 30px solid rgb(80, 80, 80);
   }
-  
+
   .time h2 {
     top: 10vw;
     margin-left: -20px;

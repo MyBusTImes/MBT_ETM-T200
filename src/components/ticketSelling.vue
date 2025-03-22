@@ -1,4 +1,5 @@
 <template>
+
     <div class="stops">
         <div class="stop">
             <span class="tag tag1" style="height: 6vh;">FROM</span>
@@ -101,6 +102,7 @@ export default {
             tickets: JSON.parse(localStorage.getItem('tickets')) || [],
             filteredTickets: [],
             count: 0,
+            bellOn: false,
             currentPage: 0, // Current page index
             ticketsPerPage: 6, // Number of tickets per page
             totalPages: 1, // Total pages, defaulted to 1
@@ -336,7 +338,7 @@ export default {
                     alert('Your browser does not support text-to-speech.');
                 }
             }
-        }, 
+        },
         prevStop() {
             if (this.StopArray.length > 0) {
                 this.currentIndexStop =
@@ -799,7 +801,7 @@ button {
     top: 5px;
     left: 5px;
     right: 5px;
-    z-index: 1000;
+    z-index: 10;
     /* Ensures it stays on top of other content */
 }
 
