@@ -68,15 +68,21 @@ export default {
     computed: {
         filteredConversations() {
             // Filter conversations based on the 'filter' property ('to' or 'from')
-            return this.conversations.filter(convo =>
+            return this.conversations.filter(convo => {
+                let isMatch;
+                let toFrom;
+    
                 if (this.filter === 'to') {
-                    this.isMatch = convo.to?.trim() === this.username;
-                    this.toFrom = "From";
+                    isMatch = convo.to?.trim() === this.username;
+                    toFrom = "From";
                 } else {
-                    this.isMatch = convo.From?.trim() === this.username;
-                    this.toFrom = "To";
+                    isMatch = convo.From?.trim() === this.username;
+                    toFrom = "To";
                 }
-            );
+    
+                this.toFrom = toFrom; // If this needs to be updated globally
+                return isMatch; // Ensuring the function returns a boolean
+            });
         },
     },
     created() {
