@@ -328,6 +328,7 @@ export default {
                     text = text.replace(/\bP&R\b/gi, "park and ride ");
                     text = text.replace(/\bnull\b/gi, "");
                     text = text.replace(/\bundefined\b/gi, "");
+                    text = text.replace(/\bln\b/gi, "line");
 
                     const utterance = new SpeechSynthesisUtterance(text);
 
