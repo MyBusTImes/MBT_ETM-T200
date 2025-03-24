@@ -39,10 +39,12 @@
       </div>
     </div>
 
+    
     <div class="footerTime" @click="toggleVisibility('time')">
       <span>{{ time }}</span><br>
       <span>{{ date }}</span>
     </div>
+    
 
     <div class="userOptions" id="options">
       <button @click="toggleBELL_func">{{ bellText }}</button><br>
@@ -50,34 +52,42 @@
       <button @click="toggleTTS">{{ ttsText }}</button>
     </div>
 
-    <div class="time" id="time">
-      <h2>TIME</h2>
-      <span>{{ time }}{{ seconds }}</span><br>
-      <span>{{ date }}</span>
-      <p>TAP CLOCK TO DISMISS</p>
+    <div class="fullScreen" id="timefs" @click="toggleVisibility('')">
+      <div class="time" id="time">
+        <h2>TIME</h2>
+        <span>{{ time }}{{ seconds }}</span><br>
+        <span>{{ date }}</span>
+        <p>TAP ANYWHERE TO DISMISS</p>
+      </div>
     </div>
 
-    <div class="time" id="gpsStatus">
-      <h2>GPS</h2>
-      <span>{{ gpsStrength === 0 ? 'No GPS available' : gpsStrength }}</span><br>
-      <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
-        }}</small><br>
-      <p>TAP GPS TO DISMISS</p>
+    <div class="fullScreen" id="gpsStatusfs" @click="toggleVisibility('')">
+      <div class="time" id="gpsStatus">
+        <h2>GPS</h2>
+        <span>{{ gpsStrength === 0 ? 'No GPS available' : gpsStrength }}</span><br>
+        <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
+          }}</small><br>
+        <p>TAP ANYWHERE TO DISMISS</p>
+      </div>
     </div>
 
-    <div class="time" id="wifiStatus">
-      <h2>WIFI</h2>
-      <span>{{ downloadSpeed }} mbps</span><br>
-      <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
-        }}</small><br>
-      <p>TAP WIFI TO DISMISS</p>
+    <div class="fullScreen" id="wifiStatusfs" @click="toggleVisibility('')">
+      <div class="time" id="wifiStatus">
+        <h2>WIFI</h2>
+        <span>{{ downloadSpeed }} mbps</span><br>
+        <small style="font-size: 2.5vw;position: fixed;width: 100%;left: 0;bottom: 5px;">Updating In: {{ updatedIn
+          }}</small><br>
+        <p>TAP ANYWHERE TO DISMISS</p>
+      </div>
     </div>
 
-    <div class="time" id="paperStatus">
-      <h2>PAPER</h2>
-      <span>{{ this.randomSignal }} tickets left</span><br>
-      <button @click="resetPaper()" style="font-size: 2vw; padding: 1vh; margin-top: 30px;">Reload Paper</button>
-      <p>TAP CLOCK TO DISMISS</p>
+    <div class="fullScreen" id="paperStatusfs" @click="toggleVisibility('')">
+      <div class="time" id="paperStatus">
+        <h2>PAPER</h2>
+        <span>{{ this.randomSignal }} tickets left</span><br>
+        <button @click="resetPaper()" style="font-size: 2vw; padding: 1vh; margin-top: 30px;">Reload Paper</button>
+        <p>TAP ANYWHERE TO DISMISS</p>
+      </div>
     </div>
   </div>
 </template>
@@ -147,10 +157,11 @@ export default {
         if (toggleBELL && !this.bellOn) {
           const randomChance = Math.floor(Math.random() * 10) + 1; // 1 in 10 chance
           if (randomChance === 1 && this.paxTotal > 0) {
-            const paxBoarding = Math.floor(Math.random() * 5); // Amount of passengers boarding
+            const paxBoarding = Math.floor(Math.random() * 10); // Amount of passengers boarding
             // Ensure paxAlight is between 0 and 5, but only 0 if paxBoarding > 1
             const minAlight = paxBoarding > 1 ? 0 : 1; 
-            const paxAlight = Math.max(minAlight, Math.min(5, Math.floor(Math.random() * this.paxTotal) + 1));
+            const maxAlight = this.paxTotal > 5 ? Math.floor(this.paxTotal * 0.1) : 5;
+            const paxAlight = Math.max(minAlight, Math.min(maxAlight, Math.floor(Math.random() * this.paxTotal) + 1));
 
             this.stopText = 'Alighting: ' + paxAlight + '\n Boarding: ' + paxBoarding;
 
@@ -238,6 +249,12 @@ export default {
           const element = document.getElementById(elementId);
           if (element) {
             element.style.display = "none";
+            
+            // Hide the 'fs' variant of the element
+            const elementFS = document.getElementById(elementId + 'fs');
+            if (elementFS) {
+              elementFS.style.display = "none";
+            }
           }
         }
       });
@@ -245,6 +262,13 @@ export default {
       // Toggle the display of the passed element
       const targetElement = document.getElementById(id);
       if (targetElement) {
+        // Toggle the display of the 'fs' variant of the element
+        const targetElementFS = document.getElementById(id + 'fs');
+        if (targetElementFS) {
+          targetElementFS.style.display = (targetElementFS.style.display === "block") ? "none" : "block";
+        }
+
+        // Toggle the display of the main element
         targetElement.style.display = (targetElement.style.display === "block") ? "none" : "block";
       }
     },
@@ -360,6 +384,15 @@ export default {
 </script>
 
 <style scoped>
+.fullScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+
 .stopBanner {
   background-color: #ca1a1a;
   position: fixed;

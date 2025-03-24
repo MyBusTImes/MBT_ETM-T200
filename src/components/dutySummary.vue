@@ -38,19 +38,13 @@ export default {
   data() {
     return {
       ticketDataArray: JSON.parse(localStorage.getItem('ticketDataArray')) || [],
-      TripID: localStorage.getItem('TripID'),
+      //TripID: localStorage.getItem('TripID'),
     };
   },
   computed: {
     filteredTrips() {
-      // Guard against invalid or empty TripID and ticketDataArray
-      if (!this.TripID || !Array.isArray(this.ticketDataArray)) {
-        return []; // Return an empty array if there's no valid TripID or ticketDataArray
-      }
-
-      // Filter trips by matching TripID, ensuring both are the same type (string)
-      const tripID = String(this.TripID); // Ensure TripID is a string
-      return this.ticketDataArray.filter(trip => String(trip.tripID) === tripID);
+      // Just return the entire ticketDataArray without filtering by TripID
+      return this.ticketDataArray;
     },
     totalPassengers() {
       // Return the total number of passengers by counting the length of filteredTrips
@@ -76,6 +70,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .headers {

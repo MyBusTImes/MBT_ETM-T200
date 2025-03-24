@@ -24,6 +24,7 @@ import loadTicketData from "../components/loadTicketData.vue";
 import passengerOccupany from "../components/passengerOccupany.vue";
 import vehicleConfig from "../components/vehicleConfig.vue";
 import tripSummary from "../components/tripSummary.vue";
+import dutySummary from "../components/dutySummary.vue";
 import ticketReport from "../components/ticketReport.vue";
 import optionsMore from "../components/optionsMore.vue";
 import PreLogged from "../components/PreLogged.vue";
@@ -120,6 +121,11 @@ const routes = [
     path: '/tripSummary',
     name: 'tripSummary',
     component: tripSummary,
+  },
+  {
+    path: '/dutySummary',
+    name: 'dutySummary',
+    component: dutySummary,
   },
   {
     path: '/ticketReport',

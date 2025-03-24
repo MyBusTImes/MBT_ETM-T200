@@ -93,28 +93,44 @@ export default {
         },
         acceptTrip() {
             if (this.selectedTrip) {
-                // Set all the required data in localStorage, ensuring null values are handled
-                localStorage.setItem("TripID", this.selectedTrip.trip_id || null);
-                localStorage.setItem('startTime', this.selectedTrip.trip_date_time || null);
-                localStorage.setItem('selectedRouteNum', this.selectedTrip.route_number || null);
-                localStorage.setItem('selectedRouteEnd', this.selectedTrip.end_destination || null);
-                localStorage.setItem('selectedRoute', this.selectedTrip.route_id || null);
-                localStorage.setItem('INBOUND', this.selectedTrip.InBound || null);
-                localStorage.setItem('currentIndexStop', 1);
+                fetch(`https://api.mybustimes.cc/api/routes/?route_id=${this.selectedTrip.route_id}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Extract start and end destinations
+                    const startDestination = data.results[0].start_destination || null;
+                    const endDestination = data.results[0].end_destination || null;
 
-                // Retrieve the routes stored in localStorage and parse it into an object
-                const storedRoutes = localStorage.getItem('routes');
-                const routes = storedRoutes ? JSON.parse(storedRoutes) : null;
+                    // Set the start destination based on InBound status
+                    this.startDest = this.selectedTrip.InBound == 1 ? startDestination : endDestination;
 
-                // Find the route matching the selectedRoute ID, with fallback for null
-                const selectedRouteData = routes ? routes.find(route => route.route_id == this.selectedTrip.route_id) : null;
+                    console.log(this.startDest);
 
-                // If selectedRouteData exists, set the stop values, else set null
-                localStorage.setItem('selectedRouteStop1', selectedRouteData ? selectedRouteData.stop || null : null);
-                localStorage.setItem('selectedRouteStop2', selectedRouteData ? selectedRouteData.stop2 || null : null);
+                    // Set all the required data in localStorage, ensuring null values are handled
+                    localStorage.setItem("TripID", this.selectedTrip.trip_id || null);
+                    localStorage.setItem('startTime', this.selectedTrip.trip_date_time || null);
+                    localStorage.setItem('selectedRouteNum', this.selectedTrip.route_number || null);
+                    localStorage.setItem('selectedRouteStart', this.startDest || null);
+                    localStorage.setItem('selectedRouteEnd', this.selectedTrip.end_destination || null);
+                    localStorage.setItem('selectedRoute', this.selectedTrip.route_id || null);
+                    localStorage.setItem('INBOUND', this.selectedTrip.InBound || null);
+                    localStorage.setItem('currentIndexStop', 1);
+                    localStorage.setItem('selectedRouteRouteNum', this.selectedTrip.route_number || null);
 
-                console.log(this.selectedTrip.trip_id, this.selectedTrip.trip_date_time, this.selectedTrip.route_number, this.selectedTrip.end_destination, this.selectedTrip.route_id, this.selectedTrip.InBound);
-                this.$router.push({ path: `/loadTicketData` });
+                    // Retrieve the routes stored in localStorage and parse it into an object
+                    const storedRoutes = localStorage.getItem('routes');
+                    const routes = storedRoutes ? JSON.parse(storedRoutes) : null;
+
+                    // Find the route matching the selectedRoute ID, with fallback for null
+                    const selectedRouteData = routes ? routes.find(route => route.route_id == this.selectedTrip.route_id) : null;
+
+                    // If selectedRouteData exists, set the stop values, else set null
+                    localStorage.setItem('selectedRouteStop1', selectedRouteData ? selectedRouteData.stop || null : null);
+                    localStorage.setItem('selectedRouteStop2', selectedRouteData ? selectedRouteData.stop2 || null : null);
+
+                    console.log(this.selectedTrip.trip_id, this.selectedTrip.trip_date_time, this.selectedTrip.route_number, this.selectedTrip.end_destination, this.selectedTrip.route_id, this.selectedTrip.InBound);
+                    this.$router.push({ path: `/loadTicketData` });
+                })
+                .catch(error => console.error("Error fetching route details:", error));
             }
         }
     },

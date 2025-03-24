@@ -225,7 +225,7 @@ export default {
                 // Set inactivity timer to redirect after 30 seconds
                 this.inactivityTimer = setTimeout(() => {
                     this.$router.push({ path: '/vehicleInMotition' });
-                }, 30000); // 30 seconds
+                }, 10000); // 30 seconds
             }
         },
 
@@ -282,7 +282,7 @@ export default {
             const toElement = document.getElementById('To');
             if (toElement && this.routeArray.length > 0) {
                 toElement.textContent = this.routeArray[this.currentIndexTo];
-                localStorage.setItem("dest", this.routeArray[this.currentIndexTo]);
+                localStorage.setItem("selectedRouteEnd", this.routeArray[this.currentIndexTo]);
             }
         },
 
@@ -290,6 +290,7 @@ export default {
             const fromElement = document.getElementById('From');
             if (fromElement && this.routeArray.length > 0) {
                 fromElement.textContent = this.routeArray[this.currentIndexFrom];
+                localStorage.setItem("selectedRouteEnd", this.routeArray[this.currentIndexFrom]);
             }
         },
 

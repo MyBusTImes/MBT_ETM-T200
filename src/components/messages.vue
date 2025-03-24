@@ -10,41 +10,65 @@
             FROM YOU
         </button>
     </div>
-    <div class="messages" v-if="filteredConversations.length">
-        <div v-for="conversation in filteredConversations" :key="conversation.conversation_id">
-            <button @click="message(conversation.conversation_id)">
-                <div class="message-header">
-                    <p class="message-time">{{ new Date(conversation.created_at).toLocaleTimeString([], {
+    <div v-if="filteredConversations.length" class="tripContainer">
+      <div class="trip" v-for="conversation in filteredConversations" :key="conversation.conversation_id" @click="message(conversation.conversation_id)">
+        <div class="headers">
+          <h3>Time</h3>
+          <h3>From</h3>
+          <h3>Title</h3>
+        </div>
+        <br>
+        <div class="data">
+            <p class="message-time">{{ new Date(conversation.created_at).toLocaleTimeString([], {
                         day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
                     }) }}</p>
-                    <p class="message-from">{{ conversation.From }}</p>
-                </div>
-                <p class="message-title">Title: {{ conversation.title }}</p>
-            </button>
+          <p class="message-from">{{ conversation.From }}</p>
+          <p class="message-title">Title: {{ conversation.title }}</p>
         </div>
+      </div>
     </div>
+    
     <div v-else>
         <p>No conversations found.</p>
     </div>
+    <div class="overlay" @click="openMessage('close')">
+        <div class="newMessage" @click.stop>
+            <input type="text" name="to" id="to" v-model="newMessage.to" placeholder="To"><br>
+            <input type="text" name="title" id="title" v-model="newMessage.title" placeholder="Title"><br>
+            <input type="hidden" name="from" :value="username">
+            <textarea name="message" id="message" v-model="newMessage.message" rows="10"
+                placeholder="Enter your message"></textarea>
+            <button class="sendMessage" @click="sendMessage()">SEND</button>
+        </div>
+    </div>
     <div class="buttons">
         <button class="optionBT" @click="navigateToOptions">BACK</button>
+        <button class="issue" style="background-color: #004ab9; color: white; width: calc(50vw - 5px);" @click="openMessage('open')">NEW</button>
+        <button class="startBT" style="width: 25vw;" @click="fetchConversations(username)">REFRESH</button>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: "DriverMessaging",
     data() {
         return {
             username: localStorage.getItem("username")?.trim(),
             conversations: [],
-            filter: "to",
+            filter: "to", // Default to 'to' filter
+            newMessage: {
+                to: "",
+                message: "",
+            },
         };
     },
     computed: {
         filteredConversations() {
-            return this.conversations.filter((convo) =>
-                this.filter === "to"
+            // Filter conversations based on the 'filter' property ('to' or 'from')
+            return this.conversations.filter(convo =>
+                this.filter === 'to'
                     ? convo.to?.trim() === this.username
                     : convo.From?.trim() === this.username
             );
@@ -54,26 +78,140 @@ export default {
         this.fetchConversations();
     },
     methods: {
-        fetchConversations() {
-            const ToResponse = JSON.parse(localStorage.getItem("UserToData")) || [];
-            const FromResponse = JSON.parse(localStorage.getItem("UserFromData")) || [];
-            this.conversations = [...ToResponse, ...FromResponse];
+        async fetchConversations() {
+            try {
+                // Fetch conversations where 'to' is the username and where 'From' is the username
+                const responses = await Promise.all([
+                    axios.get('https://api.mybustimes.cc/api/conversation/', { params: { format: 'json', to: this.username } }),
+                    axios.get('https://api.mybustimes.cc/api/conversation/', { params: { format: 'json', From: this.username } }),
+                ]);
+
+                // Store data in localStorage for 'to' and 'from' conversations
+                localStorage.setItem('UserToData', JSON.stringify(responses[0].data.results || []));
+                localStorage.setItem('UserFromData', JSON.stringify(responses[1].data.results || []));
+
+                // Combine 'to' and 'from' conversations into a single array
+                const ToResponse = JSON.parse(localStorage.getItem("UserToData")) || [];
+                const FromResponse = JSON.parse(localStorage.getItem("UserFromData")) || [];
+                this.conversations = [...ToResponse, ...FromResponse];
+            } catch (error) {
+                console.error('Error fetching conversations:', error);
+                alert('Failed to fetch conversations.');
+            }
         },
         navigateToOptions() {
             this.$router.push({ path: "/optionsMenu" });
         },
         message(id) {
             localStorage.setItem("selectedMessage", id);
-            console.log(id);
             this.$router.push({ path: "/message" });
         },
+        openMessage(options) {
+            const overlay = document.getElementsByClassName('overlay')[0];
+            overlay.style.display = options === 'open' ? 'block' : 'none';
+        },
+        async sendMessage() {
+            if (!this.newMessage.to || !this.newMessage.message || !this.newMessage.title) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const conversationData = {
+                to: this.newMessage.to,
+                From: this.username,
+                title: this.newMessage.title
+            };
+
+            try {
+                // Create a new conversation
+                const conversationResponse = await axios.post("https://api.mybustimes.cc/api/conversation/", conversationData, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (conversationResponse.status === 201) {
+                    const conversationId = conversationResponse.data.conversation_id;
+                    const messageData = {
+                        to_user: this.newMessage.to,
+                        message: this.newMessage.message,
+                        conversation_id: conversationId
+                    };
+
+                    // Send the message for the created conversation
+                    const messageResponse = await axios.post("https://api.mybustimes.cc/api/messages/", messageData, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+
+                    if (messageResponse.status === 201) {
+                        alert("Message sent successfully.");
+                        // Clear the form fields after successful message send
+                        this.newMessage.to = "";
+                        this.newMessage.title = "";
+                        this.newMessage.message = "";
+                        this.fetchConversations(); // Re-fetch conversations after sending the message
+                    } else {
+                        alert("Failed to send message.");
+                    }
+                } else {
+                    alert("Failed to create conversation.");
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert("Failed to send message.");
+            }
+        }
     },
 };
-
 </script>
 
 
 <style scoped>
+.sendMessage {
+    background: #004ab9;
+    color: #ffffff;
+    font-size: 2.5vh;  
+    width: calc(100% - 8px);
+    left: 25vw;
+    height: 7.5vh;
+}
+
+.newMessage {
+    padding: 3.5px 0;
+    position: fixed;
+    top: 20vh;
+    width: 75vw;
+    left: 12.5vw;
+    background: white;
+    z-index: 1002;
+}
+
+.newMessage input,
+.newMessage textarea {
+    width: calc(100% - 30px);
+    padding: 10px;
+    border: 1px solid;
+}
+
+.newMessage input::placeholder,
+.newMessage textarea::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+
+.overlay {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.35);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1001;
+}
+
 .who button.active {
     border-color: rgb(208, 149, 76);
     background: #feb75f;
@@ -110,73 +248,71 @@ export default {
     border: #d2d2d2 2.5px solid;
 }
 
-.messages {
-    position: fixed;
-    top: calc(4vh + 60px);
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-    height: 70vh;
-    overflow-y: scroll;
-}
-
-.messages button {
-    background: transparent;
-    color: red;
-    border: 1px 0px gray solid;
-    border-color: #c8c8c8;
-    border-style: solid;
-    border-width: 2px 0;
-    margin-bottom: -2px;
-    width: 100%;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-}
-
-.messages button:hover {
-    background-color: #e7e7e7;
-    cursor: pointer;
-}
-
-.message-header {
+.headers {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+}
+
+.headers h3 {
+    margin: 0;
+    padding: 5px;
+    flex: 1;
+    text-align: left;
+    font-size: 3vw;
+}
+
+.data {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.data p {
+    margin: 0;
+    padding: 5px;
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+    font-size: 2.5vw;
+}
+
+.tripContainer {
+    width: 100vw;
+    overflow-y: auto;
+    position: fixed;
+    left: 0;
+    top: 10vh;
+    bottom: 20vh;
+}
+
+.trip:hover {
+    background-color: #ffce73;
+}
+
+.trip {
+    margin-bottom: -2.5px;
+    background-color: #e6ebff;
+    border-bottom: 2.5px solid gray;
+    border-top: 2.5px solid gray;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
-.message-time {
-    text-align: left;
-    position: relative;
-    left: 0;
-}
-
-.message-from {
-    text-align: right;
-    position: relative;
-    right: 0;
-}
-
-.message-title {
-    text-align: left;
-    margin-top: 10px;
+.trip .headers,
+.trip .data {
     width: 100%;
 }
 
-.top {
-    position: fixed;
-    width: 100vw;
-    background: black;
-    left: 0;
-    top: 0;
-    color: white;
+p {
     text-align: left;
-    height: 45px;
+    font-size: 1rem;
+    color: #555;
 }
 
-.top h3 {
-    margin-top: 8px;
-    margin-left: 10px;
+.startBT:hover {
+    background-color: #0056b3;
 }
 </style>

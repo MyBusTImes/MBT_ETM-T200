@@ -145,7 +145,7 @@ export default {
             volumeTimeout: null, // Store the timeout ID
             customTTS: '', // Model for the custom text input
             savedAnnouncements: [], // Array to store saved announcements
-            dest: localStorage.getItem('dest'),
+            dest: localStorage.getItem('selectedRouteEnd'),
         };
     },
     created() {
