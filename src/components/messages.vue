@@ -22,7 +22,7 @@
             <p class="message-time">{{ new Date(conversation.created_at).toLocaleTimeString([], {
                         day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
                     }) }}</p>
-          <p class="message-from">{{ conversation.From }}</p>
+          <p class="message-from">{{ toFrom === 'To' ? conversation.To : conversation.From }}</p>
           <p class="message-title">Title: {{ conversation.title }}</p>
         </div>
       </div>
