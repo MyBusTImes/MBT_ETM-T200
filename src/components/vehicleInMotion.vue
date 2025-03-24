@@ -81,9 +81,14 @@ export default {
                 if ('speechSynthesis' in window) {
                     // Replace "opp" with "opposite" before speaking
                     text = text.replace(/\bM - \b/gi, "");
-                    text = text.replace(/\badj\b/gi, "adjacent to, ");
+                    text = text.replace(/\badj\b/gi, "adjacent, ");
                     text = text.replace(/\bPH\b/gi, "pub, ");
                     text = text.replace(/\bopp\b/gi, "opposite, ");
+                    text = text.replace(/\bnr\b/gi, "near, ");
+                    text = text.replace(/\bP&R\b/gi, "park and ride ");
+                    text = text.replace(/\bnull\b/gi, "");
+                    text = text.replace(/\bundefined\b/gi, "");
+                    text = text.replace(/\bln\b/gi, "line");
 
                     const utterance = new SpeechSynthesisUtterance(text);
 
