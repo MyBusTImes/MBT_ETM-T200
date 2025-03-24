@@ -71,7 +71,7 @@ export default {
             this.$router.push({ path: '/' + page });
         },
         endTrip() {
-            const keysToRemove = ['paxTotal', 'tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop'];
+            const keysToRemove = ['paxTotal', 'tickets', 'dead', 'dontLog', 'currentIndexStop', 'stopArray', 'selectedRouteEnd', 'selectedRouteDest1', 'selectedRouteDest2', 'selectedRouteStart', 'TripID', 'INBOUND', 'dontLog','selectedRoute', 'selectedEndDestination', 'selectedRouteRouteNum', 'startTime','selectedRouteStop1', 'selectedRouteStop2', 'activeRouteStop', 'dest'];
             keysToRemove.forEach(key => localStorage.removeItem(key));
             localStorage.setItem('InMotition', false);
 

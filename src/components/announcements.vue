@@ -5,8 +5,7 @@
                 50).toFixed(2) }}</div>
         </div>
         <div class="full">
-            <button
-                @click="play(routeNum + ', To, ' + dest)">{{ routeNum }} To {{ dest }}</button>
+            <button @click="play(routeNumName + ', To, ' + dest)">{{ routeNum }} To {{ dest }}</button>
         </div>
         <div class="full">
             <button @click="play('This Bus Terminates Here, All change please, all change.')">This Bus
@@ -145,7 +144,12 @@ export default {
             volumeTimeout: null, // Store the timeout ID
             customTTS: '', // Model for the custom text input
             savedAnnouncements: [], // Array to store saved announcements
-            dest: localStorage.getItem('selectedRouteEnd'),
+            dest: localStorage.getItem('dest'),
+            routeNumName: (
+            (localStorage.getItem('selectedRouteName') && localStorage.getItem('selectedRouteName').trim() !== '' && localStorage.getItem('selectedRouteName') !== 'null') 
+                ? localStorage.getItem('selectedRouteName').trim() 
+                : localStorage.getItem('selectedRouteRouteNum')
+            ) || '',
         };
     },
     created() {
@@ -156,7 +160,23 @@ export default {
             this.$router.push({ path: '/' + page });
         },
         play(text) {
+            console.log(localStorage.getItem('selectedRouteName')?.trim());
             if ('speechSynthesis' in window) {
+                // Replace P&R with "park and ride"
+                text = text.replace(/\bP&R\b/gi, "park and ride ");
+                text = text.replace(/\bnull\b/gi, "");
+                text = text.replace(/\bundefined\b/gi, "");
+
+                // Replace '501' with 'five-oh-one' (or similar logic for other numbers)
+                text = text.replace(/\b(\d{3})\b/g, (match) => {
+                    return match.replace(/(\d)(\d)(\d)/, (m, first, second, third) => {
+                        if (second === '0') {
+                            return `${first}-O-${third}`;
+                        }
+                        return `${first}-${second}-${third}`;
+                    });
+                });
+
                 const utterance = new SpeechSynthesisUtterance(text);
 
                 // Set default language and voice

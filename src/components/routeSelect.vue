@@ -265,6 +265,7 @@ export default {
             localStorage.setItem('selectedRouteRouteNum', Route.route_num);
             localStorage.setItem('selectedRouteDest1', Route.destination);
             localStorage.setItem('selectedRouteDest2', Route.destination2);
+            localStorage.setItem('selectedRouteName', Route.route_name);
 
             // Show the popup
             const popup = document.querySelector('.popup');
@@ -302,12 +303,16 @@ export default {
                     const popup2 = document.querySelector('.popup2');
                     popup2.style.display = 'block';
                     this.selectedEndDestination = this.stop2Array;
+                    localStorage.setItem('selectedRouteDestEnd', Route.destination);
+                    localStorage.setItem('selectedRouteDestStart', Route.destination2);
                     button4.addEventListener('click', handleButton4Click);
                 } else if (button.classList.contains('button2')) {
                     localStorage.setItem('INBOUND', false);
                     const popup2 = document.querySelector('.popup2');
                     popup2.style.display = 'block';
                     this.selectedEndDestination = this.stopArray;
+                    localStorage.setItem('selectedRouteDestStart', Route.destination2);
+                    localStorage.setItem('selectedRouteDestEnd', Route.destination);
                     button4.addEventListener('click', handleButton4Click);
                 }
 

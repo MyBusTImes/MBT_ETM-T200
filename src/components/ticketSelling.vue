@@ -176,7 +176,18 @@ export default {
         this.INBOUND = INBOUND === 'true';
         this.routeArray = [routeStart, ...routeDest1Array, ...routeDest2Array, routeEnd].filter(Boolean);
 
-        if (this.INBOUND) {
+        if (localStorage.getItem("dest") !== null) {
+            this.End = localStorage.getItem("dest");
+            if (this.INBOUND) {
+                this.StopArray = routeStop1Array;
+                this.Start = this.routeArray[0];
+                localStorage.setItem('stopArray', JSON.stringify(this.StopArray));
+            } else {
+                this.StopArray = routeStop2Array;
+                this.Start = this.routeArray[this.routeArray.length - 1];
+                localStorage.setItem('stopArray', JSON.stringify(this.StopArray));
+            }
+        } else if (this.INBOUND) {
             this.StopArray = routeStop1Array;
             this.Start = this.routeArray[0];
             this.End = this.routeArray[this.routeArray.length - 1];
@@ -282,7 +293,7 @@ export default {
             const toElement = document.getElementById('To');
             if (toElement && this.routeArray.length > 0) {
                 toElement.textContent = this.routeArray[this.currentIndexTo];
-                localStorage.setItem("selectedRouteEnd", this.routeArray[this.currentIndexTo]);
+                localStorage.setItem("dest", this.routeArray[this.currentIndexTo]);
             }
         },
 
@@ -290,7 +301,7 @@ export default {
             const fromElement = document.getElementById('From');
             if (fromElement && this.routeArray.length > 0) {
                 fromElement.textContent = this.routeArray[this.currentIndexFrom];
-                localStorage.setItem("selectedRouteEnd", this.routeArray[this.currentIndexFrom]);
+                localStorage.setItem("start", this.routeArray[this.currentIndexFrom]);
             }
         },
 
@@ -310,9 +321,13 @@ export default {
                 if ('speechSynthesis' in window) {
                     // Replace "opp" with "opposite" before speaking
                     text = text.replace(/\bM - \b/gi, "");
-                    text = text.replace(/\badj\b/gi, "adjacent to, ");
+                    text = text.replace(/\badj\b/gi, "adjacent, ");
                     text = text.replace(/\bPH\b/gi, "pub, ");
                     text = text.replace(/\bopp\b/gi, "opposite, ");
+                    text = text.replace(/\bnr\b/gi, "near, ");
+                    text = text.replace(/\bP&R\b/gi, "park and ride ");
+                    text = text.replace(/\bnull\b/gi, "");
+                    text = text.replace(/\bundefined\b/gi, "");
 
                     const utterance = new SpeechSynthesisUtterance(text);
 
