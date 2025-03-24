@@ -56,6 +56,7 @@ export default {
             newMessage: '',  // To store the user input
             messagePerson: '', // To store the recipient's name
             conversationId: '',
+            interval: null,  // Store the interval ID
         };
     },
     created() {
@@ -63,7 +64,21 @@ export default {
         this.fetchMessages();
     },
     mounted() {
-        setInterval(this.fetchMessages, 5000);
+        // Store the interval ID
+        this.interval = setInterval(this.fetchMessages, 5000);
+    },
+    beforeUnmount() {
+        // Clear the interval when the component is unmounted
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+    },
+    beforeRouteLeave(to, from, next) {
+        // Clear the interval before leaving the route
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        next();  // Allow the navigation to proceed
     },
     methods: {
         async fetchMessages() {
@@ -90,10 +105,6 @@ export default {
                         this.to = 'from ' + this.conversation[0].From;
                         this.to_user = this.conversation[0].From;
                     }
-
-                    //console.log('0 ' + this.username);
-                    //console.log('1 ' + this.conversation[0].to);
-                    //console.log('2 ' + this.conversation[0].From);
 
                     // Mark messages as read
                     this.markMessagesAsRead();
@@ -140,10 +151,12 @@ export default {
                 console.error("Error marking messages as read:", error);
             }
         },
+
         openMessage(options) {
             const overlay = document.getElementsByClassName('overlay')[0];
             overlay.style.display = options === 'open' ? 'block' : 'none';
         },
+
         async sendMessage() {
             const conversationId = localStorage.getItem("selectedMessage"); // Get selected conversation ID from localStorage
             const messageText = this.newMessage; // Assuming you have a user input field for the message
@@ -169,7 +182,9 @@ export default {
                 console.error("Error sending message:", error);
             }
         },
+
         navigateToOptions() {
+            clearInterval(this.interval);  // Clear the interval before navigating away
             this.$router.push({ path: '/messageSection' });
         }
     }

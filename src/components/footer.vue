@@ -7,8 +7,8 @@
     <div class="status">
       <div style="left: 12.5vw;" class="status-item">
         <!-- https://live.staticflickr.com/65535/54264885401_932921103d_o_d.png-->
-        <img :src="getImageSrc(messages)" alt="Status Icon 1">
-        <p class="messagesNum">{{ messages }}</p>
+        <img :src="getImageSrc(unreadMessagesCount)" alt="Status Icon 1">
+        <p class="messagesNum">{{ unreadMessagesCount }}</p>
         <img class="status-logo" src="@/assets/Mail.png" alt="">
       </div>
       <div style="left: 22.5vw;" class="status-item" @click="toggleVisibility('gpsStatus')">
@@ -93,23 +93,28 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'FooterComponent',
   data() {
     return {
+      username: localStorage.getItem("username")?.trim(),
       gpsStrength: 0,
       gpsImage: 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png',
       wifiImage: 'https://live.staticflickr.com/65535/54262661719_3c33814e9d_o_d.png',
       time: '', // Live time
       seconds: '',
       date: '', // Live date
-      messages: 0,
       muteSFX: localStorage.getItem("muteSFX") === "true",
       muteTTS: localStorage.getItem("muteTTS") === "true",
       toggleBELL: localStorage.getItem("toggleBELL") === "true",
       bellLock: false,
       bellOn: false,
       paxAlight: 0,
+      unreadMessagesCount: 0, // Initial unread messages count
+      previousUnreadMessagesCount: 0, // Store the previous count for comparison
+      checkInterval: 1, // Interval for polling the API
     };
   },
   computed: {
@@ -124,6 +129,7 @@ export default {
     },
   },
   mounted() {
+    this.startPollingForUnreadMessages();
     this.interval = setInterval(this.checkBell, 3000);
     this.checkLocationPermission();
     this.resetUpdatedTime();
@@ -145,6 +151,46 @@ export default {
     }, 1000);
   },
   methods: {
+    async checkUnreadMessages() {
+      try {
+        // Make an API call to fetch unread messages
+        const response = await axios.get(
+          `https://api.mybustimes.cc/api/messages?to_user=${this.username}`,
+          { params: { format: 'json' } }
+        );
+
+        const unreadMessages = response.data.results.filter(
+          (message) => message.to_user === this.username && !message.read
+        );
+
+        // Update unread message count
+        this.unreadMessagesCount = unreadMessages.length;
+
+        // If the count has increased, play the sound
+        if (this.unreadMessagesCount > this.previousUnreadMessagesCount) {
+          this.playSoundEffect();
+        }
+
+        // Store the current count for future comparison
+        this.previousUnreadMessagesCount = this.unreadMessagesCount;
+      } catch (error) {
+        console.error('Error fetching unread messages:', error);
+      }
+    },
+
+    // Function to play sound effect if not muted
+    playSoundEffect() {
+      const audio = new Audio(require('@/assets/Audio/Logon.wav'));
+      const isSFXMuted = localStorage.getItem('muteSFX') === 'true';
+      if (!isSFXMuted) {
+        audio.play();
+      }
+    },
+
+    // Start polling every 5 seconds (you can adjust the interval)
+    startPollingForUnreadMessages() {
+      this.checkInterval = setInterval(this.checkUnreadMessages, 1000);
+    },
     checkBell() {
       if (this.bellLock) return; // Prevent triggering during lockout
 
