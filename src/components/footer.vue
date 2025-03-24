@@ -154,7 +154,6 @@ export default {
     async checkUnreadMessages() {
       console.log(this.username);
       try {
-        if (this.username !== null) {
           // Make an API call to fetch unread messages
           const response = await axios.get(
             `https://api.mybustimes.cc/api/messages?to_user=${this.username}`,
@@ -176,7 +175,6 @@ export default {
   
           // Store the current count for future comparison
           this.previousUnreadMessagesCount = this.unreadMessagesCount;
-        }
       } catch (error) {
         console.error('Error fetching unread messages:', error);
       }
