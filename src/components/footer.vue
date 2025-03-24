@@ -153,26 +153,28 @@ export default {
   methods: {
     async checkUnreadMessages() {
       try {
-        // Make an API call to fetch unread messages
-        const response = await axios.get(
-          `https://api.mybustimes.cc/api/messages?to_user=${this.username}`,
-          { params: { format: 'json' } }
-        );
-
-        const unreadMessages = response.data.results.filter(
-          (message) => message.to_user === this.username && !message.read
-        );
-
-        // Update unread message count
-        this.unreadMessagesCount = unreadMessages.length;
-
-        // If the count has increased, play the sound
-        if (this.unreadMessagesCount > this.previousUnreadMessagesCount) {
-          this.playSoundEffect();
+        if (this.username != null) {
+          // Make an API call to fetch unread messages
+          const response = await axios.get(
+            `https://api.mybustimes.cc/api/messages?to_user=${this.username}`,
+            { params: { format: 'json' } }
+          );
+  
+          const unreadMessages = response.data.results.filter(
+            (message) => message.to_user === this.username && !message.read
+          );
+  
+          // Update unread message count
+          this.unreadMessagesCount = unreadMessages.length;
+  
+          // If the count has increased, play the sound
+          if (this.unreadMessagesCount > this.previousUnreadMessagesCount) {
+            this.playSoundEffect();
+          }
+  
+          // Store the current count for future comparison
+          this.previousUnreadMessagesCount = this.unreadMessagesCount;
         }
-
-        // Store the current count for future comparison
-        this.previousUnreadMessagesCount = this.unreadMessagesCount;
       } catch (error) {
         console.error('Error fetching unread messages:', error);
       }
