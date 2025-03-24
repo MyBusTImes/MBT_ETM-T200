@@ -152,8 +152,9 @@ export default {
   },
   methods: {
     async checkUnreadMessages() {
+      console.log(this.username);
       try {
-        if (this.username != null) {
+        if (this.username !== null) {
           // Make an API call to fetch unread messages
           const response = await axios.get(
             `https://api.mybustimes.cc/api/messages?to_user=${this.username}`,
@@ -166,6 +167,7 @@ export default {
   
           // Update unread message count
           this.unreadMessagesCount = unreadMessages.length;
+          console.log(unreadMessages.length);
   
           // If the count has increased, play the sound
           if (this.unreadMessagesCount > this.previousUnreadMessagesCount) {
