@@ -14,7 +14,7 @@
       <div class="trip" v-for="conversation in filteredConversations" :key="conversation.conversation_id" @click="message(conversation.conversation_id)">
         <div class="headers">
           <h3>Time</h3>
-          <h3>From</h3>
+          <h3>{{ toFrom }}</h3>
           <h3>Title</h3>
         </div>
         <br>
@@ -58,6 +58,7 @@ export default {
             username: localStorage.getItem("username")?.trim(),
             conversations: [],
             filter: "to", // Default to 'to' filter
+            toFrom: "To",
             newMessage: {
                 to: "",
                 message: "",
@@ -71,6 +72,9 @@ export default {
                 this.filter === 'to'
                     ? convo.to?.trim() === this.username
                     : convo.From?.trim() === this.username
+                this.filter === 'to'
+                    ? this.toFrom = "From"
+                    : this.toFrom = "To"
             );
         },
     },
