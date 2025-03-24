@@ -163,9 +163,15 @@ export default {
             console.log(localStorage.getItem('selectedRouteName')?.trim());
             if ('speechSynthesis' in window) {
                 // Replace P&R with "park and ride"
+                text = text.replace(/\bM - \b/gi, "");
+                text = text.replace(/\badj\b/gi, "adjacent, ");
+                text = text.replace(/\bPH\b/gi, "pub, ");
+                text = text.replace(/\bopp\b/gi, "opposite, ");
+                text = text.replace(/\bnr\b/gi, "near, ");
                 text = text.replace(/\bP&R\b/gi, "park and ride ");
                 text = text.replace(/\bnull\b/gi, "");
                 text = text.replace(/\bundefined\b/gi, "");
+                text = text.replace(/\bln\b/gi, "line");
 
                 // Replace '501' with 'five-oh-one' (or similar logic for other numbers)
                 text = text.replace(/\b(\d{3})\b/g, (match) => {
