@@ -9,7 +9,7 @@ module.exports = defineConfig({
       background_color: '#FFFFFF',
     },
     workboxOptions: {
-      cacheName: 'my-ticket-v2.0.32.1',
+      cacheName: 'my-ticket-v2.0.33',
       // You can define custom cache names here
       skipWaiting: true, // Skip waiting to activate the new service worker immediately
       clientsClaim: true, // Ensure the service worker controls all clients as soon as possible
