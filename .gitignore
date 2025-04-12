@@ -21,7 +21,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
-#login
-/src/components/DriverLogin.vue
-
