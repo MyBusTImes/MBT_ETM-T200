@@ -1,5 +1,6 @@
-# MBT Ticketer
-The code for MBT Ticketer
+# MBT_ETM-T200
+The code for MBT ETM T200 code base
+This is the tickter style ETM
 
 ## How to Run
 
