@@ -8,14 +8,14 @@ This is the tickter style ETM
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/Kai-codin/MBT-Ticketer.git
+git clone https://github.com/Kai-codin/MBT-ETM-T200.git
 ```
 
 ### Step 2: Navigate to the Project Directory
 Change to the project directory:
 
 ```bash
-cd MBT-Ticketer
+cd MBT-ETM-T200
 ```
 
 ### Step 3: Running Locally
